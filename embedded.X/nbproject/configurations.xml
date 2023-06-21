@@ -4,6 +4,21 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f1" displayName="libraries" projectFiles="true">
+        <logicalFolder name="f3" displayName="lcd" projectFiles="true">
+          <itemPath>libraries/lcd/lcd.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="numpad" projectFiles="true">
+          <itemPath>libraries/numpad/numpad.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="timer" projectFiles="true">
+          <itemPath>libraries/timer/timer.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="uart" projectFiles="true">
+          <itemPath>libraries/uart/uart.h</itemPath>
+        </logicalFolder>
+        <itemPath>libraries/constants.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -12,7 +27,21 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>//vmware-host/Shared Folders/embedded/A2_project_work/embedded.X/main.c</itemPath>
+      <logicalFolder name="f1" displayName="libraries" projectFiles="true">
+        <logicalFolder name="f3" displayName="lcd" projectFiles="true">
+          <itemPath>libraries/lcd/lcd.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="numpad" projectFiles="true">
+          <itemPath>libraries/numpad/numpad.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="timer" projectFiles="true">
+          <itemPath>libraries/timer/timer.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="uart" projectFiles="true">
+          <itemPath>libraries/uart/uart.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -21,7 +50,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>//vmware-host/Shared Folders/embedded/A2_project_work/embedded.X</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

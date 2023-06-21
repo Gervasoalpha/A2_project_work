@@ -11,14 +11,44 @@
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
 #include <xc.h>
-// include constants
-#include "constants.h"
+
+// include libraries
+#include "libraries/constants.h"
+#include "libraries/numpad/numpad.h"
+#include "libraries/timer/timer.h"
+#include "libraries/lcd/lcd.h"
+#include "libraries/uart/uart.h"
 
 void main(void)
 {
+	const enum CLOCK timerZeroClock = MS1;
+
+	//
+	TimerZeroInit(timerZeroClock);
+
+	//
+	UARTInit();
+
+	//
+	LcdInit();
+
+	while (1)
+	{
+	};
+
 	return;
 }
 
 void __interrupt() ISR()
 {
+	if (TimerZero())
+	{
+		// 1 millisecond interrupt
+	}
+
+	if (UARTHasReceived())
+	{
+		// get data incoming
+		//UARTGetReceived();
+	}
 }

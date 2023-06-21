@@ -3,13 +3,13 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Embedded</name>
-            <creation-uuid>ef84f4a5-d6a4-4450-b7e9-7494dca508b4</creation-uuid>
+            <name>embedded</name>
+            <creation-uuid>4077bd35-ac06-4895-980f-c92c3b2928dd</creation-uuid>
             <make-project-type>0</make-project-type>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>//vmware-host/Shared Folders/embedded/A2_project_work/embedded.X</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
