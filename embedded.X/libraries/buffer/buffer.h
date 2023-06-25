@@ -2,7 +2,8 @@
 #define _buffer
 
 char BufferAppend(char item);
-char BufferGetSize();
+char* BufferGet();;
+int BufferGetSize();
 void BufferClear();
 
 #endif

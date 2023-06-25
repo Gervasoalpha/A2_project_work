@@ -1,26 +1,13 @@
 //
 #define PRELOAD_VALUE 131
-#define _GIE 0x80
-#define _PEIE 0x40
-#define _T0IE 0x20
-#define _PSA 0x08
-#define _T0IF 0x04
 
 #include <xc.h>
 #include "timer.h"
+#include "../interrupt/interrupt.h"
 #include "../constants.h"
 
-void InterruptInit();
 void TimerZeroInit(char PS);
 char TimerZero();
-
-/**
- * Enables the use of interrupts
- */
-void InterruptInit()
-{
-	INTCON |= _GIE | _PEIE;
-}
 
 /**
  * Enables Timer 0
@@ -31,9 +18,9 @@ void TimerZeroInit(char PS)
 {
 	//
 	InterruptInit();
-	//
-	INTCON |= _T0IE;
-	//
+	// enable timer zero interrupt
+	INTCONbits.T0IE = 1;
+	// set prescaler
 	OPTION_REG |= PS;
 	//
 	TMR0 = PRELOAD_VALUE;
@@ -47,10 +34,10 @@ void TimerZeroInit(char PS)
 char TimerZero()
 {
 	//
-	if (INTCON & _T0IF)
+	if (INTCONbits.T0IF)
 	{
 		//
-		INTCON &= ~_T0IF;
+		INTCONbits.T0IF = 0;
 		//
 		TMR0 = PRELOAD_VALUE;
 		return 1;

@@ -5,11 +5,12 @@
 #include "../constants.h"
 
 char BufferAppend(char item);
-char BufferGetSize();
+char* BufferGet();
+int BufferGetSize();
 void BufferClear();
 
 char buffer[BUFFER_SIZE];
-uint16_t i = 0;
+unsigned int i = 0;
 
 /**
  * Appends an item to the end of the buffer
@@ -30,12 +31,21 @@ char BufferAppend(char item)
 }
 
 /**
+ * Get the buffer
+ * @return buffer
+ */
+char* BufferGet()
+{
+	return buffer;
+}
+
+/**
  * Get item length of the buffer
  * @return 
  */
-char BufferGetSize()
+int BufferGetSize()
 {
-	return i;
+	return(int) i;
 }
 
 /**

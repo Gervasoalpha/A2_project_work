@@ -1,6 +1,7 @@
 
 #include <xc.h>
 #include "uart.h"
+#include "../interrupt/interrupt.h"
 #include "../constants.h"
 
 void UARTInit();
@@ -8,19 +9,29 @@ char UARTTxChar(char c);
 void UARTInterrupt();
 char UARTGetReceived();
 
-char UARTHasReceived = 0;
-
 /**
  * Initialize UART Serial communication
  */
 void UARTInit()
 {
-	TXSTA |= 0x24;
-	RCSTA = 0x90;
+	// enable global interrupt
+	InterruptInit();
+	// set baud rate
 	SPBRG = (char) (_XTAL_FREQ / (long) (64UL * BAUD_RATE)) - 1;
-	INTCON |= 0x80;
-	INTCON |= 0x40;
-	PIE1 |= 0x20;
+	// 8 bits TX
+	TXSTAbits.TX9 = 0;
+	// enable TX - also enables interrupt
+	TXSTAbits.TXEN = 1;
+	// async TX
+	TXSTAbits.SYNC = 0;
+	// high baud rate TX
+	TXSTAbits.BRGH = 1;
+	// enable RX
+	RCSTAbits.SPEN = 1;
+	// 8 bits RX
+	RCSTAbits.RX9 = 0;
+	// enable continuous RX
+	RCSTAbits.CREN = 1;
 }
 
 /**
@@ -30,11 +41,8 @@ void UARTInit()
  */
 char UARTTxChar(char c)
 {
-	TRISC &= ~0x40;
-	TRISC |= 0x80;
-	while (!(PIR1 & 0x10));
-	PIR1 &= ~0x10;
 	TXREG = c;
+	while (!TXSTAbits.TRMT);
 	return 1;
 }
 
@@ -44,10 +52,16 @@ char UARTTxChar(char c)
  */
 void UARTInterrupt()
 {
-	if (RCIF)
+	if (PIR1bits.RCIF)
 	{
-		RCIF = 0;
+		PIR1bits.RCIF = 0;
 		UARTHasReceived = 1;
+		// RX error
+		if (RCSTAbits.FERR || RCSTAbits.OERR)
+		{
+			RCSTAbits.CREN = 0;
+			RCSTAbits.CREN = 1;
+		}
 	}
 }
 
