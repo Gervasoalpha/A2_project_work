@@ -3,7 +3,9 @@
 
 void UARTInit();
 char UARTTxChar(char c);
-char UARTHasReceived();
+void UARTInterrupt();
 char UARTGetReceived();
+
+char UARTHasReceived;
 
 #endif

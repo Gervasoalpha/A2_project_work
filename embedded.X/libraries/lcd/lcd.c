@@ -62,7 +62,7 @@ void LcdSend(char data, char type)
 	// 
 	LCD_EN = 1;
 	LCD_PORT = data;
-	LCD_RS = type;
+	LCD_RS = (__bit) type;
 
 	__delay_ms(3);
 
@@ -104,7 +104,7 @@ void IntToString(int n, char *string)
 
 	for (int i = 0; i < digits; i++)
 	{
-		string[i] = (n / (10 * i)) + 48;
+		string[i] = (char) (n / (10 * i)) + 48;
 	}
 }
 

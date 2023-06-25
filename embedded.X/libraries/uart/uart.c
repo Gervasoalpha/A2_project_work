@@ -5,8 +5,10 @@
 
 void UARTInit();
 char UARTTxChar(char c);
-char UARTHasReceived();
+void UARTInterrupt();
 char UARTGetReceived();
+
+char UARTHasReceived = 0;
 
 /**
  * Initialize UART Serial communication
@@ -39,17 +41,13 @@ char UARTTxChar(char c)
 /**
  * Checks if any data has arrived on serial port
  * MUST BE PLACED IN THE INTERRUPT FUNCTION
- * @return true if some data has arrived
  */
-char UARTHasReceived()
+void UARTInterrupt()
 {
 	if (RCIF)
 	{
 		RCIF = 0;
-		return 1;
-	} else
-	{
-		return 0;
+		UARTHasReceived = 1;
 	}
 }
 
@@ -61,5 +59,6 @@ char UARTGetReceived()
 {
 	char rxData = RCREG;
 	RCREG = 0;
+	UARTHasReceived = 0;
 	return rxData;
 }
