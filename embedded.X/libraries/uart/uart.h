@@ -2,10 +2,8 @@
 #define _uart
 
 void UARTInit();
-char UARTTxChar(char c);
-void UARTInterrupt();
-char UARTGetReceived();
-
-char UARTHasReceived;
+void UARTTxChar(char c);
+void UARTTxString(char* string);
+char UARTInterrupt(unsigned char *ByteReceived);
 
 #endif

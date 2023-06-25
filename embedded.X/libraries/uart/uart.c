@@ -5,9 +5,9 @@
 #include "../constants.h"
 
 void UARTInit();
-char UARTTxChar(char c);
-void UARTInterrupt();
-char UARTGetReceived();
+void UARTTxChar(char c);
+void UARTTxString(char* string);
+char UARTInterrupt(unsigned char *ByteReceived);
 
 /**
  * Initialize UART Serial communication
@@ -30,7 +30,7 @@ void UARTInit()
 	RCSTAbits.SPEN = 1;
 	// 8 bits RX
 	RCSTAbits.RX9 = 0;
-	// enable continuous RX
+	// enable continuous RX - also enables interrupt
 	RCSTAbits.CREN = 1;
 }
 
@@ -39,40 +39,51 @@ void UARTInit()
  * @param c byte to send
  * @return true if data was sent
  */
-char UARTTxChar(char c)
+void UARTTxChar(char c)
 {
 	TXREG = c;
 	while (!TXSTAbits.TRMT);
-	return 1;
 }
 
 /**
- * Checks if any data has arrived on serial port
- * MUST BE PLACED IN THE INTERRUPT FUNCTION
+ * Send string to serial port
+ * @param string
  */
-void UARTInterrupt()
+void UARTTxString(char* string)
+{
+	unsigned int i;
+	for (i = 0; string[i] != '\0'; i++)
+	{
+		UARTTxChar(string[i]);
+	}
+}
+
+/**
+ * Checks if any data has arrived on serial port, if so puts the received byte in byteReceived
+ * @param byteReceived output parameter if data has been received
+ * MUST BE PLACED IN THE INTERRUPT FUNCTION
+ * @return true if data has been received
+ */
+char UARTInterrupt(unsigned char *bytesReceived)
 {
 	if (PIR1bits.RCIF)
 	{
-		PIR1bits.RCIF = 0;
-		UARTHasReceived = 1;
 		// RX error
 		if (RCSTAbits.FERR || RCSTAbits.OERR)
 		{
 			RCSTAbits.CREN = 0;
 			RCSTAbits.CREN = 1;
 		}
+		//
+		bytesReceived[0] = RCREG;
+//		char secondByte = RCREG;
+//		if (secondByte)
+//		{
+//			bytesReceived[1] = secondByte;
+//		}
+		return 1;
+	} else
+	{
+		return 0;
 	}
-}
-
-/**
- * Get the last arrived byte from serial communication
- * @return data in RCREG
- */
-char UARTGetReceived()
-{
-	char rxData = RCREG;
-	RCREG = 0;
-	UARTHasReceived = 0;
-	return rxData;
 }

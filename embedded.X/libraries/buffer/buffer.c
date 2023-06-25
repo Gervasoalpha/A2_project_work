@@ -4,12 +4,13 @@
 #include "buffer.h"
 #include "../constants.h"
 
-char BufferAppend(char item);
-char* BufferGet();
-int BufferGetSize();
+char BufferAppend(unsigned char item);
+char BufferAppendArray(unsigned char *items, unsigned int size);
+unsigned char* BufferGet();
+unsigned int BufferGetSize();
 void BufferClear();
 
-char buffer[BUFFER_SIZE];
+unsigned char buffer[BUFFER_SIZE];
 unsigned int i = 0;
 
 /**
@@ -17,24 +18,47 @@ unsigned int i = 0;
  * @param item to be appended
  * @return true if the item was succesfully appended
  */
-char BufferAppend(char item)
+char BufferAppend(unsigned char item)
 {
 	if (i >= BUFFER_SIZE)
 	{
 		return 0;
-	} else
-	{
-		buffer[i] = item;
-		i++;
-		return 1;
 	}
+	//
+	buffer[i] = item;
+	i++;
+	return 1;
+}
+
+/**
+ * Appends an array of items to the buffer
+ * @param items	array of items to be appended
+ * @param size number of items of the array to append to the buffer
+ * @return true if all the spcified items were succesfully appended
+ */
+char BufferAppendArray(unsigned char *items, unsigned int size)
+{
+	if (size == 0 || size > (BUFFER_SIZE - i))
+	{
+		return 0;
+	}
+	//
+	unsigned int i;
+	for (i = 0; i < size; i++)
+	{
+		if (!BufferAppend(items[i]))
+		{
+			return 0;
+		}
+	}
+	return 1;
 }
 
 /**
  * Get the buffer
  * @return buffer
  */
-char* BufferGet()
+unsigned char* BufferGet()
 {
 	return buffer;
 }
@@ -43,9 +67,9 @@ char* BufferGet()
  * Get item length of the buffer
  * @return 
  */
-int BufferGetSize()
+unsigned int BufferGetSize()
 {
-	return(int) i;
+	return i;
 }
 
 /**
