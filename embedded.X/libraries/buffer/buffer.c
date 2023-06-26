@@ -7,6 +7,7 @@
 char BufferAppend(unsigned char item);
 char BufferAppendArray(unsigned char *items, unsigned int size);
 unsigned char* BufferGet();
+unsigned char BufferAt(unsigned int index);
 unsigned int BufferGetSize();
 void BufferClear();
 
@@ -70,6 +71,21 @@ unsigned char* BufferGet()
 unsigned int BufferGetSize()
 {
 	return i;
+}
+
+/**
+ * Get the item at the specified index
+ * @param index
+ * @return the item if it exists
+ */
+unsigned char BufferAt(unsigned int index)
+{
+	if (index >= i)
+	{
+		return 0;
+	}
+	//
+	return buffer[index];
 }
 
 /**
