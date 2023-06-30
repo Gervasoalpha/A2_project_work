@@ -64,23 +64,18 @@ void UARTTxString(char* string)
  * MUST BE PLACED IN THE INTERRUPT FUNCTION
  * @return true if data has been received
  */
-char UARTInterrupt(unsigned char *bytesReceived)
+char UARTInterrupt(unsigned char *byteReceived)
 {
 	if (PIR1bits.RCIF)
 	{
-		// RX error
+		// frame or overflow error
 		if (RCSTAbits.FERR || RCSTAbits.OERR)
 		{
 			RCSTAbits.CREN = 0;
 			RCSTAbits.CREN = 1;
 		}
-		//
-		bytesReceived[0] = RCREG;
-//		char secondByte = RCREG;
-//		if (secondByte)
-//		{
-//			bytesReceived[1] = secondByte;
-//		}
+		
+		*byteReceived = RCREG;
 		return 1;
 	} else
 	{
