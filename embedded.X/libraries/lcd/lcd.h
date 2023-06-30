@@ -2,8 +2,9 @@
 #define _lcd
 
 void LcdInit();
+void LcdSendChar(char c);
 void LcdSendString(char *string);
-void LcdSetCursor(char row, char column);
+void LcdSetCursor(unsigned char row, unsigned char column);
 void LcdClear();
 
 #endif
