@@ -2,10 +2,10 @@
 #define _constants
 
 // CRYSTAL FREQUENCY
-#define _XTAL_FREQ 20*1000000
+#define _XTAL_FREQ 10*1000000
 
 // UART BAUD RATE
-#define BAUD_RATE 115200
+#define BAUD_RATE 9600
 
 // BUFFER SIZE
 #define BUFFER_SIZE 50

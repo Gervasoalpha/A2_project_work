@@ -15,6 +15,10 @@
 #define LCD_DISPLAY_SETUP 0x0C
 #define LCD_SHIFT_RIGHT 0x1C
 #define LCD_HOME 0x02
+#define LETTER_A_CHAR 48
+#define ROW_1_ADDRESS 0x40
+#define ROW_2_ADDRESS 0x10
+#define ROW_3_ADDRESS 0x50
 
 #include <xc.h>
 #include "lcd.h"
@@ -25,6 +29,7 @@ void LcdSend(char data, char type);
 void LcdSendChar(char c);
 void LcdSendString(char *string);
 void LcdSetCursor(unsigned char row, unsigned char column);
+void LcdSendInt(int n);
 void LcdClear();
 void IntToString(int n, char *string);
 int LcdPow(char b, char e);
@@ -94,6 +99,17 @@ void LcdSendString(char *string)
 }
 
 /**
+ * Write an integer to the LCD display
+ * @param n integer
+ */
+void LcdSendInt(int n)
+{
+	char string[10];
+	IntToString(n, &string);
+	LcdSendString(string);
+}
+
+/**
  * Shifts the display cursor to the given position
  * @param row 0 based index of rows
  * @param column 0 based index of columns
@@ -107,11 +123,29 @@ void LcdSetCursor(unsigned char row, unsigned char column)
 
 	LcdSend(LCD_HOME, 0);
 
-	unsigned int i, rowBytes = 40;
-
-	for (i = 0; i <= ((rowBytes * row) + (column - 1)); i++)
+	char rowAddress = 0;
+	switch (row)
 	{
-		LcdSend(LCD_SHIFT_RIGHT, 1);
+		case 1:
+		{
+			rowAddress = ROW_1_ADDRESS;
+			break;
+		}
+		case 2:
+		{
+			rowAddress = ROW_2_ADDRESS;
+			break;
+		}
+		case 3:
+		{
+			rowAddress = ROW_3_ADDRESS;
+			break;
+		}
+	}
+	char i;
+	for (i = 0; i < 0x27/*(column + rowAddress)*/; i++)
+	{
+		LcdSend(LCD_SHIFT_RIGHT, 0);
 	}
 }
 
@@ -123,21 +157,42 @@ void LcdClear()
 	LcdSend(LCD_CLEAR, 0);
 }
 
+/**
+ * Convert an integer into a string
+ * @param n integer
+ * @param string that gets returned
+ */
 void IntToString(int n, char *string)
 {
 	char digits = 1;
+	unsigned int k = n < 0 ? 1 : 0;
 	//
-	while (n / LcdPow(10, digits))
+	while ((unsigned int) (n / LcdPow(10, digits)))
 	{
 		digits++;
 	}
-	//
-	for (int i = 0; i < digits; i++)
+	// add the minus sign if the integer is negative
+	if (k == 1)
 	{
-		string[i] = (char) (n / (10 * i)) + 48;
+		string[0] = '-';
+	}
+	//
+	for (int i = digits - 1; i >= 0; i--)
+	{
+		unsigned int p = LcdPow(10, i);
+		unsigned int digit = n / p;
+		n = n - (digit * p);
+		string[k] = (char) (digit + LETTER_A_CHAR);
+		k++;
 	}
 }
 
+/**
+ * Simple power calculation
+ * @param b base
+ * @param e exponent
+ * @return result of power
+ */
 int LcdPow(char b, char e)
 {
 	int n = 1;

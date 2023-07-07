@@ -25,7 +25,7 @@ void UARTInit()
 	// async TX
 	TXSTAbits.SYNC = 0;
 	// high baud rate TX
-	TXSTAbits.BRGH = 1;
+	TXSTAbits.BRGH = 0;
 	// enable RX
 	RCSTAbits.SPEN = 1;
 	// 8 bits RX
@@ -74,8 +74,8 @@ char UARTInterrupt(unsigned char *byteReceived)
 			RCSTAbits.CREN = 0;
 			RCSTAbits.CREN = 1;
 		}
-		
-		*byteReceived = RCREG;
+
+		byteReceived[0] = RCREG;
 		return 1;
 	} else
 	{

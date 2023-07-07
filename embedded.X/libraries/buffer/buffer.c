@@ -7,12 +7,13 @@
 char BufferAppend(unsigned char item);
 char BufferAppendArray(unsigned char *items, unsigned int size);
 unsigned char* BufferGet();
+unsigned char* BufferCopy();
 unsigned char BufferAt(unsigned int index);
 unsigned int BufferGetSize();
 void BufferClear();
 
 unsigned char buffer[BUFFER_SIZE];
-unsigned int i = 0;
+unsigned int index = 0;
 
 /**
  * Appends an item to the end of the buffer
@@ -21,13 +22,13 @@ unsigned int i = 0;
  */
 char BufferAppend(unsigned char item)
 {
-	if (i >= BUFFER_SIZE)
+	if (index >= BUFFER_SIZE)
 	{
 		return 0;
 	}
 	//
-	buffer[i] = item;
-	i++;
+	buffer[index] = item;
+	index++;
 	return 1;
 }
 
@@ -35,11 +36,11 @@ char BufferAppend(unsigned char item)
  * Appends an array of items to the buffer
  * @param items	array of items to be appended
  * @param size number of items of the array to append to the buffer
- * @return true if all the spcified items were succesfully appended
+ * @return true if all the specified items were succesfully appended
  */
 char BufferAppendArray(unsigned char *items, unsigned int size)
 {
-	if (size == 0 || size > (BUFFER_SIZE - i))
+	if (size == 0 || size > (BUFFER_SIZE - index))
 	{
 		return 0;
 	}
@@ -70,7 +71,7 @@ unsigned char* BufferGet()
  */
 unsigned int BufferGetSize()
 {
-	return i;
+	return index;
 }
 
 /**
@@ -80,7 +81,7 @@ unsigned int BufferGetSize()
  */
 unsigned char BufferAt(unsigned int index)
 {
-	if (index >= i)
+	if (index >= index)
 	{
 		return 0;
 	}
@@ -94,5 +95,12 @@ unsigned char BufferAt(unsigned int index)
 void BufferClear()
 {
 	memset(buffer, 0, sizeof buffer);
-	i = 0;
+	index = 0;
+}
+
+unsigned char* BufferCopy()
+{
+	unsigned char newBuffer[BUFFER_SIZE];
+	memcpy(newBuffer, buffer, index);
+	return newBuffer;
 }
