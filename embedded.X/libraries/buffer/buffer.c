@@ -8,7 +8,8 @@ char BufferAppend(unsigned char item);
 char BufferAppendArray(unsigned char *items, unsigned int size);
 unsigned char* BufferGet();
 unsigned char* BufferCopy();
-unsigned char BufferAt(unsigned int index);
+unsigned char BufferAt(unsigned int i);
+unsigned char BufferFindFirst(unsigned char item, unsigned int *i);
 unsigned int BufferGetSize();
 void BufferClear();
 
@@ -18,7 +19,7 @@ unsigned int index = 0;
 /**
  * Appends an item to the end of the buffer
  * @param item to be appended
- * @return true if the item was succesfully appended
+ * @return true if the item was successfully appended
  */
 char BufferAppend(unsigned char item)
 {
@@ -36,7 +37,7 @@ char BufferAppend(unsigned char item)
  * Appends an array of items to the buffer
  * @param items	array of items to be appended
  * @param size number of items of the array to append to the buffer
- * @return true if all the specified items were succesfully appended
+ * @return true if all the specified items were successfully appended
  */
 char BufferAppendArray(unsigned char *items, unsigned int size)
 {
@@ -76,17 +77,36 @@ unsigned int BufferGetSize()
 
 /**
  * Get the item at the specified index
- * @param index
+ * @param i index
  * @return the item if it exists
  */
-unsigned char BufferAt(unsigned int index)
+unsigned char BufferAt(unsigned int i)
 {
-	if (index >= index)
+	if (i >= index)
 	{
 		return 0;
 	}
 	//
-	return buffer[index];
+	return buffer[i];
+}
+
+/**
+ * Find the first item occurrence in the buffer and returns it
+ * @param item to be found
+ * @param i return the index of the found item
+ * @return the item if found, 0 otherwise
+ */
+unsigned char BufferFindFirst(unsigned char item, unsigned int *i)
+{
+	for (unsigned int k = 0; k < index; k++)
+	{
+		if (buffer[k] == item)
+		{
+			*i = k;
+			return buffer[k];
+		}
+	}
+	return 0;
 }
 
 /**
