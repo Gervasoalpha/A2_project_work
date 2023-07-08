@@ -95,7 +95,7 @@ namespace A2_project_work.Web.Controllers
           
             return Ok(new
             {
-                versionn = fvi.FileVersion
+                version = fvi.FileVersion
             });
         }
     }
