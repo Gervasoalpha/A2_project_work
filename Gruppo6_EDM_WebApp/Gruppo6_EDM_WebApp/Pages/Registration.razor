@@ -1,0 +1,62 @@
+﻿@page "/registration"
+<h3>Registration</h3>
+
+@if (ShowRegistrationErros)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+
+<EditForm Model="_userForRegistration" OnValidSubmit="Register" class="card card-body bg-light mt-5">
+    <DataAnnotationsValidator />
+
+    <div class="form-group row">
+        <label for="name" class="col-md-2 col-form-label">name:</label>
+        <div class="col-md-10">
+            <InputText id="name" class="form-control" @bind-Value="_userForRegistration.name" />
+            <ValidationMessage For="@(() => _userForRegistration.name)" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="surname" class="col-md-2 col-form-label">surname:</label>
+        <div class="col-md-10">
+            <InputText id="surname" class="form-control" @bind-Value="_userForRegistration.surname" />
+            <ValidationMessage For="@(() => _userForRegistration.surname)" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="username" class="col-md-2 col-form-label">username:</label>
+        <div class="col-md-10">
+            <InputText id="username" class="form-control" @bind-Value="_userForRegistration.username" />
+            <ValidationMessage For="@(() => _userForRegistration.username)" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="password" class="col-md-2 col-form-label">password:</label>
+        <div class="col-md-10">
+            <InputText type="password" id="password" class="form-control" @bind-Value="_userForRegistration.password" />
+            <ValidationMessage For="@(() => _userForRegistration.password)" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="confirm" class="col-md-2 col-form-label">Confirm password:</label>
+        <div class="col-md-10">
+            <InputText type="password" id="confirm" class="form-control" @bind-Value="_userForRegistration.ConfirmPassword" />
+            <ValidationMessage For="@(() => _userForRegistration.ConfirmPassword)" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="submit" class="btn btn-success">Register</button>
+        </div>
+    </div>
+</EditForm>
