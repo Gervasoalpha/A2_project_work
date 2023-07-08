@@ -40,7 +40,7 @@ namespace A2_project_work.Web.Controllers
         [HttpPost("raspberry")]
         public async Task<IActionResult> ValidateRasp(string builidingnumber, string password)
         {
-            var aou = _configuration.GetConnectionString("rasppswd");
+
             if (password == _configuration.GetConnectionString("rasppswd"))
             {
              return Ok(_tokenRepository.GetToken(username: builidingnumber, israsp: true, userID: Guid.NewGuid()));
