@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "DBfunction": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7238"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31420,
+      "useSSL": false
+    }
+  }
+}

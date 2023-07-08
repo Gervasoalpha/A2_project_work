@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2_project_work.ApplicationCore", "A2-project-work.ApplicationCore\A2_project_work.ApplicationCore.csproj", "{A67DB228-4A0F-44D8-94CC-425C7240AEF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2_project_work.Domain", "A2-project-work.Domain\A2_project_work.Domain.csproj", "{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2_project_work.Infrastructure", "A2-project-work.Infrastructure\A2_project_work.Infrastructure.csproj", "{349B5AA6-5207-4827-8F33-109084AF0FF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2_project_work.Web", "A2-project-work.Web\A2_project_work.Web.csproj", "{236FB80B-8455-4C62-814D-119FCDA2D4FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBfunction", "DBfunction\DBfunction.csproj", "{0B1CB187-1C35-4062-8425-D6C29D964EA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WORKER PER PROVA", "WORKER PER PROVA\WORKER PER PROVA.csproj", "{6BC60400-0433-4D69-ABD1-4C1C73BC7865}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CF6E1B27-29FB-4B82-967D-3B70898DEADA}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.github\workflows\personal-locatelloj_gruppo6-webapp.yml = ..\..\.github\workflows\personal-locatelloj_gruppo6-webapp.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{AF854955-71A4-4BDA-9645-D1EAD5FEC433}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		FUNCTION TEST|Any CPU = FUNCTION TEST|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A67DB228-4A0F-44D8-94CC-425C7240AEF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67DB228-4A0F-44D8-94CC-425C7240AEF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67DB228-4A0F-44D8-94CC-425C7240AEF1}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{A67DB228-4A0F-44D8-94CC-425C7240AEF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67DB228-4A0F-44D8-94CC-425C7240AEF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FD2F94-0507-461D-86D8-F0F0EB30E80C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349B5AA6-5207-4827-8F33-109084AF0FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349B5AA6-5207-4827-8F33-109084AF0FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349B5AA6-5207-4827-8F33-109084AF0FF0}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{349B5AA6-5207-4827-8F33-109084AF0FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349B5AA6-5207-4827-8F33-109084AF0FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236FB80B-8455-4C62-814D-119FCDA2D4FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236FB80B-8455-4C62-814D-119FCDA2D4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236FB80B-8455-4C62-814D-119FCDA2D4FF}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{236FB80B-8455-4C62-814D-119FCDA2D4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236FB80B-8455-4C62-814D-119FCDA2D4FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.FUNCTION TEST|Any CPU.Build.0 = FUNCTION TEST|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B1CB187-1C35-4062-8425-D6C29D964EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.FUNCTION TEST|Any CPU.ActiveCfg = FUNCTION TEST|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.FUNCTION TEST|Any CPU.Build.0 = FUNCTION TEST|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC60400-0433-4D69-ABD1-4C1C73BC7865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.FUNCTION TEST|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.FUNCTION TEST|Any CPU.Build.0 = Debug|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF854955-71A4-4BDA-9645-D1EAD5FEC433}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14AEB24C-FF1F-450A-9582-E596EB462934}
+	EndGlobalSection
+EndGlobal

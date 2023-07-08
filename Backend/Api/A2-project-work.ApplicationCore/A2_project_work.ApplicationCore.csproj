@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;FUNCTION TEST</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\Services\**" />
+    <Compile Remove="Services\**" />
+    <Compile Remove="Settings\**" />
+    <EmbeddedResource Remove="Interfaces\Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Settings\**" />
+    <None Remove="Interfaces\Services\**" />
+    <None Remove="Services\**" />
+    <None Remove="Settings\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.138" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\A2-project-work.Domain\A2_project_work.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
