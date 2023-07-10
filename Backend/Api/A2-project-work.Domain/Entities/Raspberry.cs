@@ -10,4 +10,9 @@ namespace A2_project_work.Domain.Entities
     {
         public int buildingnumber { get; set; }
     }
+    public class TokenRasp
+    {
+        public string? buildingnumber { get; set; }
+        public string? password { get; set; }
+    }
 }

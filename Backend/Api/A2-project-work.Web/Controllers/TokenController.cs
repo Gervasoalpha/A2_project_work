@@ -25,25 +25,44 @@ namespace A2_project_work.Web.Controllers
         }
         [AllowAnonymous]
         [HttpPost("user")]
-        public async Task<IActionResult> ValidateUser(string username, string password)
+        public async Task<IActionResult> ValidateUser(UsernameAndPasswordUser user)
         {
-            User us = await _userRepository.GetUserByUsernameAndPassword(username, password);
-            if (us != null)
-            {
-                return Ok(_tokenRepository.GetToken(username, Guid.NewGuid()));
+            if (user.username != null && user.password != null) {
+                User us = await _userRepository.GetUserByUsernameAndPassword(user.username, user.password);
+                if (us != null)
+                {
+                    return Ok(_tokenRepository.GetToken(user.username, Guid.NewGuid()));
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-
-            return BadRequest();
+            else
+            {
+                return BadRequest();
+            }
+           
 
         }
         [AllowAnonymous]
         [HttpPost("raspberry")]
-        public async Task<IActionResult> ValidateRasp(string builidingnumber, string password)
+        public async Task<IActionResult> ValidateRasp( TokenRasp rasp)
         {
-
-            if (password == _configuration.GetConnectionString("rasppswd"))
+            if (rasp.password != null && rasp.buildingnumber != null)
             {
-             return Ok(_tokenRepository.GetToken(username: builidingnumber, israsp: true, userID: Guid.NewGuid()));
+
+                string password = rasp.password;
+                string buildingnumber = rasp.buildingnumber;
+
+                if (password == _configuration.GetConnectionString("rasppswd"))
+                {
+                    return Ok(_tokenRepository.GetToken(username: buildingnumber, israsp: true, userID: Guid.NewGuid()));
+                }
+                else
+                {
+                    return NotFound("NO rasp found");
+                }
             }
             else
             {
@@ -52,17 +71,28 @@ namespace A2_project_work.Web.Controllers
         }
         [AllowAnonymous]
         [HttpPost("admin")]
-        public async Task<IActionResult> ValidateAdmin( string username, string password)
+        public async Task<IActionResult> ValidateAdmin(UsernameAndPasswordUser user)
         {
-            bool us = await _userRepository.Isadmin(username, password);
-            if (us == true)
+            if (user.username != null && user.password != null)
             {
-                return Ok(_tokenRepository.GetToken(username: username, isadmin: true, userID: Guid.NewGuid()));
+
+                string username = user.username;
+                string password = user.password;
+                bool us = await _userRepository.Isadmin(username, password);
+                if (us == true)
+                {
+                    return Ok(_tokenRepository.GetToken(username: username, isadmin: true, userID: Guid.NewGuid()));
+                }
+                else
+                {
+                    return NotFound("No Admin") ;
+                }
             }
             else
             {
-                return BadRequest("No Admin");
+                return BadRequest("Null values");
             }
+            
         }
 
     }
