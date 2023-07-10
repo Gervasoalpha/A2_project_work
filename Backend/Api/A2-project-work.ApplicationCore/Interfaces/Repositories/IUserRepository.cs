@@ -10,5 +10,6 @@ namespace A2_project_work.ApplicationCore.Interfaces.Repositories
         Task<User> GetUserByUsername(string username);
         Task<User> GetUserByUsernameAndPassword(string username,string password);
         Task<bool> Isadmin(string username,string password);
+        Task GiveAdminPerms(UsernameAndEmailUser user);
     }
 }

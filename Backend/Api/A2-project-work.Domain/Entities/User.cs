@@ -20,6 +20,11 @@ namespace A2_project_work.Domain.Entities
         public string? password { get; set; }
         public string? email { get; set; }
     }
+    public class UsernameAndEmailUser
+    {
+        public string? username { get; set; }
+        public string? email { get; set; }
+    }
     public class AdminUser : User
     {
         public bool admin { get; set; }

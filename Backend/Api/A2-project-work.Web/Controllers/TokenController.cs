@@ -52,7 +52,7 @@ namespace A2_project_work.Web.Controllers
         }
         [AllowAnonymous]
         [HttpPost("admin")]
-        public async Task<IActionResult> ValidateAdmin(string username, string password)
+        public async Task<IActionResult> ValidateAdmin( string username, string password)
         {
             bool us = await _userRepository.Isadmin(username, password);
             if (us == true)

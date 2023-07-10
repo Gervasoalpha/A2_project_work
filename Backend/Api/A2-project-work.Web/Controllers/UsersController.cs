@@ -70,11 +70,26 @@ namespace A2_project_work.Web.Controllers
             }
         }
 
-        // PUT api/<Users>/5
-        [HttpPut("{id}")]
-        public void Put(int id, string value)
+        // PUT api/<Users>/admin
+        [HttpPut("admin")]
+        public async Task<IActionResult> Put(UsernameAndEmailUser user)
         {
-        }
+
+            _logger.LogInformation("put admin on user");
+            try
+            {if (user.username != null && user.email != null)
+                {
+
+                    await _userRepository.GiveAdminPerms(user);
+                    return Ok();
+                }
+                else return BadRequest("Invalid username or email");
+               
+             } catch(Exception ex) {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+    }
+}
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]

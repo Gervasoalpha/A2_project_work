@@ -36,7 +36,8 @@ namespace WORKER_PER_PROVA
                 var con = Console.ReadLine();
                 if (con == "send")
                 {
-                    var message = JsonConvert.SerializeObject(new
+                  
+                var message = JsonConvert.SerializeObject(new
                     {
                         AuthCode,
                         UnlockCode,

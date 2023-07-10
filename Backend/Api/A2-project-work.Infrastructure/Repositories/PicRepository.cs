@@ -16,9 +16,20 @@ namespace A2_project_work.Infrastructure.Repositories
     {
         public PicRepository(IConfiguration configuration, string classname = "pics") : base(configuration, classname) { }
 
-        public override Task<IEnumerable<Pic>> GetAllAsync()
+        public async override Task<IEnumerable<Pic>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            string query = $@"
+SELECT
+    id,
+    portnumber,
+    buildingnumber,
+    status
+FROM
+    {classname}
+";
+            using var connection = new SqlConnection(_connectionString);
+
+            return await connection.QueryAsync<Pic>(query);
         }
 
         public async override Task<Pic> GetByIdAsync(Guid id)
