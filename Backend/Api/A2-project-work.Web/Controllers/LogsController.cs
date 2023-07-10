@@ -54,7 +54,7 @@ namespace A2_project_work.Web.Controllers
         [Authorize(Roles = "User,Administrator")]
         public async Task<IActionResult> Get(string authcode)
         {
-            _logger.LogInformation("User GET ID");
+            _logger.LogInformation("User GET unlockcode");
             var record = await _logrepo.GetUnlockCode(authcode);
             return Ok(record);
         }

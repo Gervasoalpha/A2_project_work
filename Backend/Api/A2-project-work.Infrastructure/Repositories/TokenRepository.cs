@@ -31,7 +31,6 @@ namespace A2_project_work.Infrastructure.Repositories
             List<Claim> baseclaimarr = new List<Claim> {
                         new Claim(ClaimTypes.Sid, userID.ToString()), // id utente
                         new Claim(ClaimTypes.Name, username),         // username
-                        new Claim(ClaimTypes.Role, "User")
               };
             if(isadmin){
                 expirationDate = DateTime.UtcNow.AddHours(2);
@@ -42,6 +41,10 @@ namespace A2_project_work.Infrastructure.Repositories
                 expirationDate = DateTime.UtcNow.AddYears(1);
                 baseclaimarr.RemoveAt(baseclaimarr.Count - 1);
                 baseclaimarr.Add(new Claim(ClaimTypes.Role, "Raspberry"));
+            }
+            else
+            {
+                baseclaimarr.Add(new Claim(ClaimTypes.Role, "User"));
             }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
