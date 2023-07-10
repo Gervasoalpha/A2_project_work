@@ -1,0 +1,48 @@
+﻿@page "/codice"
+@using System.Net.Http
+@using System.Net.Http.Json
+
+<h3>Codice</h3>
+
+@if (string.IsNullOrEmpty(unlockCode))
+{
+    <div class="center">
+        <input type="text" @bind="authCode" placeholder="Inserisci l'authcode" />
+        <button @onclick="FetchUnlockCode">Invia richiesta</button>
+    </div>
+}
+else
+{
+    <div class="center">
+        @unlockCodeMessage
+    </div>
+}
+
+@code {
+    private string authCode;
+    private string unlockCode;
+    private string unlockCodeMessage;
+
+    private async Task FetchUnlockCode()
+    {
+        var httpClient = new HttpClient();
+        var request = new { authCode };
+        var response = await httpClient.PostAsJsonAsync("API_URL", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseData = await response.Content.ReadFromJsonAsync<ApiResponse>();
+            unlockCode = responseData.UnlockCode;
+            unlockCodeMessage = "Codice di sblocco: " + unlockCode;
+        }
+        else
+        {
+            unlockCodeMessage = "Codice inserito sbagliato o scaduto";
+        }
+    }
+
+    private class ApiResponse
+    {
+        public string UnlockCode { get; set; }
+    }
+}

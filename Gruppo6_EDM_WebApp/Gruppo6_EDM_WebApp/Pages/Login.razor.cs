@@ -27,7 +27,7 @@ namespace Gruppo6_EDM_WebApp.Pages
             }
             else
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/codice");
             }
         }
     }
