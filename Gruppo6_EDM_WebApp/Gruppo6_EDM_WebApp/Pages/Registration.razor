@@ -39,6 +39,14 @@
     </div>
 
     <div class="form-group row">
+        <label for="email" class="col-md-2 col-form-label">email:</label>
+        <div class="col-md-10">
+            <InputText type="email" id="email" class="form-control" @bind-Value="_userForRegistration.email" />
+            <ValidationMessage For="@(() => _userForRegistration.email)" />
+        </div>
+    </div>
+
+    <div class="form-group row">
         <label for="password" class="col-md-2 col-form-label">password:</label>
         <div class="col-md-10">
             <InputText type="password" id="password" class="form-control" @bind-Value="_userForRegistration.password" />
