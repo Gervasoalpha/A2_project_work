@@ -24,23 +24,17 @@ else
     private async Task FetchUnlockCode()
     {
         var httpClient = new HttpClient();
-        var request = new { authCode };
-        var response = await httpClient.PostAsJsonAsync("API_URL", request);
+        httpClient.DefaultRequestHeaders.Add("AuthCode", authCode);
+        var response = await httpClient.PostAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs", null);
 
         if (response.IsSuccessStatusCode)
         {
-            var responseData = await response.Content.ReadFromJsonAsync<ApiResponse>();
-            unlockCode = responseData.UnlockCode;
+            unlockCode = await response.Content.ReadAsStringAsync();
             unlockCodeMessage = "Codice di sblocco: " + unlockCode;
         }
         else
         {
             unlockCodeMessage = "Codice inserito sbagliato o scaduto";
         }
-    }
-
-    private class ApiResponse
-    {
-        public string UnlockCode { get; set; }
     }
 }

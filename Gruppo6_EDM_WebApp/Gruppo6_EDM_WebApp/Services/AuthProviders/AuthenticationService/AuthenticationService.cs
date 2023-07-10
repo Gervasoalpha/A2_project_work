@@ -23,7 +23,6 @@ namespace Gruppo6_EDM_WebApp.Services.AuthProviders.AuthenticationService
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto userForAuthentication)
         {
             var content = JsonSerializer.Serialize(userForAuthentication);
-            //Console.WriteLine("Request Body: " + content); // Write request body to the console
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var authResult = await _client.PostAsync("https://gruppo6-webapp.azurewebsites.net/api/Token/user", bodyContent);
             var authContent = await authResult.Content.ReadAsStringAsync();
