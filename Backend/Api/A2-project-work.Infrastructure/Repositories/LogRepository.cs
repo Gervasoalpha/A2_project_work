@@ -47,6 +47,20 @@ WHERE [pic_id] = @pic_id
             return await connection.QueryFirstOrDefault(query, new {pic_id});
         }
 
+        public async Task<string> GetUnlockCode(string auhtcode)
+        {
+
+            const string query = @"
+SELECT
+    unlockcode
+FROM
+    logs
+WHERE [authcode] = @authcode
+";
+            using var connection = new SqlConnection(_connectionString);
+            return await connection.QueryFirstOrDefault(query, new {auhtcode});
+        }
+
         public async override Task InsertAsync(Log entity)
         {
             string query = $@"

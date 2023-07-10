@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace A2_project_work.Web.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Administrator")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -36,7 +35,7 @@ namespace A2_project_work.Web.Controllers
 
         // GET: api/<Users>
         [HttpGet]
-
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Get()
         {
             _logger.LogInformation("User GET");
@@ -53,10 +52,10 @@ namespace A2_project_work.Web.Controllers
             var record = await _userRepository.GetUserByUsername(username);
             return Ok(record);
         }
-
+    
         // POST api/<Users>
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [AllowAnonymous]
         public async Task<IActionResult> Post(NoGuidUser us)
         {
              _logger.LogInformation("post on user");
@@ -70,11 +69,26 @@ namespace A2_project_work.Web.Controllers
             }
         }
 
-        // PUT api/<Users>/5
-        [HttpPut("{id}")]
-        public void Put(int id, string value)
+        // PUT api/<Users>/admin
+        [HttpPut("admin")]
+        public async Task<IActionResult> Put(UsernameAndEmailUser user)
         {
-        }
+
+            _logger.LogInformation("put admin on user");
+            try
+            {if (user.username != null && user.email != null)
+                {
+
+                    await _userRepository.GiveAdminPerms(user);
+                    return Ok();
+                }
+                else return BadRequest("Invalid username or email");
+               
+             } catch(Exception ex) {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+    }
+}
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]
@@ -95,7 +109,7 @@ namespace A2_project_work.Web.Controllers
           
             return Ok(new
             {
-                version = fvi.FileVersion
+                versionn = fvi.FileVersion
             });
         }
     }

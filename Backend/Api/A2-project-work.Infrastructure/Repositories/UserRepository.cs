@@ -213,5 +213,18 @@ VALUES (NEWID(),@name,@surname,@username,@password,@email)";
             using var connection = new SqlConnection(_connectionString);
             await connection.ExecuteAsync(query, entity);
         }
+
+        public async Task GiveAdminPerms(UsernameAndEmailUser user)
+        {
+            string query = @"
+UPDATE users
+SET [admin?] = 1
+WHERE username = @username AND email = @email";
+
+            using var connection = new SqlConnection(_connectionString);
+            await connection.ExecuteAsync(query, user);
+        }
+
+        
     }
 }
