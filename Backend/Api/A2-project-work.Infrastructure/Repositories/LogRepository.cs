@@ -44,10 +44,11 @@ FROM
 WHERE [pic_id] = @pic_id
 ";
             using var connection = new SqlConnection(_connectionString);
-            return await connection.QueryFirstOrDefault(query, new {pic_id});
+            
+            return await connection.QueryFirstAsync<long>(query, new {pic_id});
         }
 
-        public async Task<string> GetUnlockCode(string auhtcode)
+        public async Task<string> GetUnlockCode(string authcode)
         {
 
             const string query = @"
@@ -55,10 +56,19 @@ SELECT
     unlockcode
 FROM
     logs
-WHERE [authcode] = @authcode
+WHERE authcode = @authcode
 ";
             using var connection = new SqlConnection(_connectionString);
-            return await connection.QueryFirstOrDefault(query, new {auhtcode});
+            try
+            {
+                var res = await connection.QueryFirstAsync<string>(query, new { authcode });
+                return res;
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+          
         }
 
         public async override Task InsertAsync(Log entity)
