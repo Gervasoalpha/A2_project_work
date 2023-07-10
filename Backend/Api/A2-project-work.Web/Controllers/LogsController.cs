@@ -49,14 +49,20 @@ namespace A2_project_work.Web.Controllers
             return "value";
         }
 
-        // GET api/<Users>/unlock/codice
-        [HttpGet("{authcode}")]
-        [Authorize(Roles = "User,Administrator")]
+        // GET api/<LogsController>/unlock/codice
+        [HttpGet("unlock/{authcode}")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Get(string authcode)
         {
-            _logger.LogInformation("User GET ID");
-            var record = await _logrepo.GetUnlockCode(authcode);
-            return Ok(record);
+            try
+            {
+                _logger.LogInformation("User GET unlockcode");
+                var record = await _logrepo.GetUnlockCode(authcode);
+                return Ok(record);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST api/<LogsController>
