@@ -48,8 +48,6 @@ namespace A2_project_work.Web.Controllers
             return "value";
         }
 
-        // POST api/<RaspberriesController>
-
         // POST api/<PicsController>
         [HttpPost]
        
@@ -60,11 +58,6 @@ namespace A2_project_work.Web.Controllers
             return Ok();
         }
 
-        // PUT api/<RaspberriesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
         // DELETE api/<RaspberriesController>/5
         [HttpDelete("{id}")]
