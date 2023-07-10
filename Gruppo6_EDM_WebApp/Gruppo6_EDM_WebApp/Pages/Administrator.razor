@@ -1,0 +1,138 @@
+﻿@page "/administrator"
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Administrator</h3>
+
+<h4>Users</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Pics</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pic in pics)
+        {
+            <tr>
+                <td>@pic.Nome</td>
+                <td>@pic.Descrizione</td>
+                <td>@pic.Data</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Raspberries</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Modello</th>
+            <th>Versione</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var raspberry in raspberries)
+        {
+            <tr>
+                <td>@raspberry.Nome</td>
+                <td>@raspberry.Modello</td>
+                <td>@raspberry.Versione</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Logs</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Messaggio</th>
+            <th>Livello</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in logs)
+        {
+            <tr>
+                <td>@log.Messaggio</td>
+                <td>@log.Livello</td>
+                <td>@log.Data</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<UserDto> users;
+    private List<PicDto> pics;
+    private List<RaspberryDto> raspberries;
+    private List<LogDto> logs;
+    private AuthenticationState authState;
+
+    protected override async Task OnInitializedAsync()
+    {
+        authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            var httpClient = new HttpClient();
+            users = await httpClient.GetFromJsonAsync<List<UserDto>>("https://gruppo6-webapp.azurewebsites.net/api/Users");
+            pics = await httpClient.GetFromJsonAsync<List<PicDto>>("https://gruppo6-webapp.azurewebsites.net/api/Pics");
+            raspberries = await httpClient.GetFromJsonAsync<List<RaspberryDto>>("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
+            logs = await httpClient.GetFromJsonAsync<List<LogDto>>("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+        }
+    }
+
+    public class UserDto
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
+
+    public class PicDto
+    {
+        public string Nome { get; set; }
+        public string Descrizione { get; set; }
+        public DateTime Data { get; set; }
+    }
+
+    public class RaspberryDto
+    {
+        public string Nome { get; set; }
+        public string Modello { get; set; }
+        public string Versione { get; set; }
+    }
+
+    public class LogDto
+    {
+        public string Messaggio { get; set; }
+        public string Livello { get; set; }
+        public DateTime Data { get; set; }
+    }
+}
