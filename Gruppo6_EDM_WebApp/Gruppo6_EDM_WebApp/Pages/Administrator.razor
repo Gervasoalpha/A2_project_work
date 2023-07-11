@@ -3,7 +3,7 @@
 @inject HttpClient Client
 
 <h3>Administrator</h3>
-@if (isLoading)
+@if (users== null)
 {
     <p>Loading...</p>
 }
@@ -110,11 +110,10 @@ else
 }
 *@
 @code {
-    private List<UserDto> users = new List<UserDto>();
+    private UserDto[] users;
     //private List<PicDto> pics = new List<PicDto>();
     //private List<RaspberryDto> raspberries = new List<RaspberryDto>();
     //private List<LogDto> logs = new List<LogDto>();
-    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,20 +122,18 @@ else
         if (authenticationState.User.Identity.IsAuthenticated)
         {
             var token = user.FindFirst("token")?.Value;
-            if (!string.IsNullOrEmpty(token))
-            {
+            
                 Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                await LoadDataAsync();
-                isLoading = false;
-            }
+                users = await Client.GetFromJsonAsync<UserDto[]>("https://gruppo6-webapp.azurewebsites.net/api/Users");
+       
         }
     }
 
-    private Users[] user;
+
 
     private async Task LoadDataAsync()
     {
-        users = await HttpClient.GetFromJsonAsync<Users[]>("https://gruppo6-webapp.azurewebsites.net/api/Users");
+         
         //pics = await GetPicsAsync();
         //raspberries = await GetRaspberriesAsync();
         //logs = await GetLogsAsync();
@@ -209,4 +206,4 @@ else
 //        public string pic_id { get; set; }
 //        public int id { get; set; }
 //    }
-//}
+}
