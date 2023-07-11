@@ -7,7 +7,7 @@
 {
     <div class="center">
         <input type="text" @bind="authCode" placeholder="Inserisci l'authcode" />
-        <button @onclick="FetchUnlockCode">Invia richiesta</button>
+        <button type="button" class="btn btn-primary" @onclick="FetchUnlockCode">Invia richiesta</button>
     </div>
 }
 @if (!string.IsNullOrEmpty(unlockCodeMessage))
@@ -42,7 +42,7 @@
             {
                 HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
-                var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/");
+                var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/" + authCode);
 
                 if (response.IsSuccessStatusCode)
                 {
