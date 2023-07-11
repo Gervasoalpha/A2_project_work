@@ -1,5 +1,4 @@
-﻿@page "/"
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <div class="page">
 
@@ -7,12 +6,11 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-                    <span>Hi @context.User.Identity.Name</span>
-                    <a href="Logout">Log out</a>
+                    <button type="button" class="btn"><a href="Logout">Log out</a></button>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="Registration">Register</a>
-                    <a href="Login">Log in</a>
+                    <button type="button" class="btn"><a href="Registration">Register</a></button>
+                    <button type="button" class="btn"><a href="Login">Log in</a></button>
                 </NotAuthorized>
             </AuthorizeView>
         </div>

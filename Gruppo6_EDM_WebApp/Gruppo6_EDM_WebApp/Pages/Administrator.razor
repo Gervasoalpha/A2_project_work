@@ -1,6 +1,6 @@
 ﻿@page "/administrator"
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject HttpClient HttpClient
+@inject HttpClient Client
 
 <h3>Administrator</h3>
 @if (isLoading)
@@ -35,8 +35,9 @@ else
             }
         </tbody>
     </table>
+}
 
-    @*    <h4>Pics</h4>
+@*<h4>Pics</h4>
     <table>
         <thead>
             <tr>
@@ -106,13 +107,13 @@ else
             }
         </tbody>
     </table>
-}*@
-
-    @code {
+}
+*@
+@code {
     private List<UserDto> users = new List<UserDto>();
-    private List<PicDto> pics = new List<PicDto>();
-    private List<RaspberryDto> raspberries = new List<RaspberryDto>();
-    private List<LogDto> logs = new List<LogDto>();
+    //private List<PicDto> pics = new List<PicDto>();
+    //private List<RaspberryDto> raspberries = new List<RaspberryDto>();
+    //private List<LogDto> logs = new List<LogDto>();
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
@@ -124,29 +125,31 @@ else
             var token = user.FindFirst("token")?.Value;
             if (!string.IsNullOrEmpty(token))
             {
-                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 await LoadDataAsync();
                 isLoading = false;
             }
         }
     }
 
+    private Users[] user;
+
     private async Task LoadDataAsync()
     {
-        users = await GetUsersAsync();
+        users = await HttpClient.GetFromJsonAsync<Users[]>("https://gruppo6-webapp.azurewebsites.net/api/Users");
         //pics = await GetPicsAsync();
         //raspberries = await GetRaspberriesAsync();
         //logs = await GetLogsAsync();
     }
 
-    private async Task<List<UserDto>> GetUsersAsync()
-    {
+    //private async Task<List<UserDto>> GetUsersAsync()
+    //{
 
-        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Users");
-        response.EnsureSuccessStatusCode();
-        var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
-        return users;
-    }
+    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Users");
+    //    response.EnsureSuccessStatusCode();
+    //    var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+    //    return users;
+    //}
 
     //private async Task<List<PicDto>> GetPicsAsync()
     //{
@@ -182,28 +185,28 @@ else
         public string id { get; set; }
     }
 
-    public class PicDto
-    {
-        public int port_number { get; set; }
-        public int buildingnumber { get; set; }
-        public bool status { get; set; }
-        public string id { get; set; }
-    }
+//    public class PicDto
+//    {
+//        public int port_number { get; set; }
+//        public int buildingnumber { get; set; }
+//        public bool status { get; set; }
+//        public string id { get; set; }
+//    }
 
-    public class RaspberryDto
-    {
-        public int buildingnumber { get; set; }
-        public string buildingname { get; set; }
-        public string id { get; set; }
-    }
+//    public class RaspberryDto
+//    {
+//        public int buildingnumber { get; set; }
+//        public string buildingname { get; set; }
+//        public string id { get; set; }
+//    }
 
-    public class LogDto
-    {
-        public int authcode { get; set; }
-        public int unlockcode { get; set; }
-        public bool opened { get; set; }
-        public string user_id { get; set; }
-        public string pic_id { get; set; }
-        public int id { get; set; }
-    }
-}
+//    public class LogDto
+//    {
+//        public int authcode { get; set; }
+//        public int unlockcode { get; set; }
+//        public bool opened { get; set; }
+//        public string user_id { get; set; }
+//        public string pic_id { get; set; }
+//        public int id { get; set; }
+//    }
+//}
