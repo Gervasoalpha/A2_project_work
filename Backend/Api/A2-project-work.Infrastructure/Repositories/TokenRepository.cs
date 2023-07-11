@@ -32,19 +32,24 @@ namespace A2_project_work.Infrastructure.Repositories
                         new Claim(ClaimTypes.Sid, userID.ToString()), // id utente
                         new Claim(ClaimTypes.Name, username),         // username
               };
-            if(isadmin){
+            if (isadmin)
+            {
                 expirationDate = DateTime.UtcNow.AddHours(2);
                 baseclaimarr.RemoveAt(baseclaimarr.Count - 1);
                 baseclaimarr.Add(new Claim(ClaimTypes.Role, "Administrator"));
             }
-            if(israsp){
-                expirationDate = DateTime.UtcNow.AddYears(1);
-                baseclaimarr.RemoveAt(baseclaimarr.Count - 1);
-                baseclaimarr.Add(new Claim(ClaimTypes.Role, "Raspberry"));
-            }
             else
             {
-                baseclaimarr.Add(new Claim(ClaimTypes.Role, "User"));
+                if (israsp)
+                {
+                    expirationDate = DateTime.UtcNow.AddYears(1);
+                    baseclaimarr.RemoveAt(baseclaimarr.Count - 1);
+                    baseclaimarr.Add(new Claim(ClaimTypes.Role, "Raspberry"));
+                }
+                else
+                {
+                    baseclaimarr.Add(new Claim(ClaimTypes.Role, "User"));
+                }
             }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
