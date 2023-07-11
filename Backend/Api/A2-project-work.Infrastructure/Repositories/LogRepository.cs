@@ -4,6 +4,7 @@ using A2_project_work.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using System.Collections.Generic;
 
 namespace A2_project_work.Infrastructure.Repositories
 {
@@ -97,6 +98,19 @@ VALUES (id,authcode,unlockcode,opened,user_id,pic_id)
             await sql.ExecuteAsync(query,new {authcode,pic_id,unlockcode});
         }
 
+        public async Task<IEnumerable<GetLog>> PrettyGet()
+        {
+            const string query = @"
+SELECT l.id,authcode, unlockcode, [opened?],u.name,p.portnumber 
+FROM logs l
+LEFT JOIN Users u ON l.user_id = u.id LEFT JOIN Pics p ON p.id = l.pic_id
+
+
+";
+            using var connection = new SqlConnection(_connectionString);
+            return await connection.QueryAsync<GetLog>(query);
+        }
+
         public override Task UpdateAsync(Log entity)
         {
             throw new NotImplementedException();
@@ -112,7 +126,17 @@ VALUES (id,authcode,unlockcode,opened,user_id,pic_id)
             using var sql = new SqlConnection(_connectionString);
             await sql.ExecuteAsync(query, new {state,logid });
         }
+        public async Task UpdateUser(UsernameUserId us)
+        {
 
-        
+            var query = @$"UPDATE [dbo].[{classname}]
+           SET [user_id] = @userid
+           WHERE [authcode] = @authcode
+";
+            using var sql = new SqlConnection(_connectionString);
+            await sql.ExecuteAsync(query, new { us.authcode, us.userid});
+        }
+
+
     }
 }

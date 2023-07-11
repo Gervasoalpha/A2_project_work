@@ -28,7 +28,7 @@ namespace A2_project_work.Web.Controllers
         public async Task<IActionResult> Get()
         {
             _logger.LogInformation("About page visited at {DT}", DateTime.UtcNow.ToLongTimeString());
-            var records = await _logrepo.GetAllAsync();
+            var records = await _logrepo.PrettyGet();
             return Ok(records);
         }
 
@@ -81,6 +81,13 @@ namespace A2_project_work.Web.Controllers
         [Authorize(Roles = "Administrator")]
         public void Put(int id, [FromBody] string value)
         {
+        }
+        // PUT api/<LogsController>/updateusername
+        [HttpPut("updateusername")]
+        [Authorize(Roles = "user")]
+        public async Task Put(UsernameUserId us)
+        {
+            await _logrepo.UpdateUser(us);
         }
 
         // DELETE api/<LogsController>/5
