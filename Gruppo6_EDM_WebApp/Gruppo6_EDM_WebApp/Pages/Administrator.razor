@@ -1,24 +1,25 @@
 ﻿@page "/administrator"
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject HttpClient Client
+@inject HttpClient HttpClient
+@inject ILocalStorageService localStorage
 
-<h3>Administrator</h3>
 @if (isLoading)
 {
     <p>Loading...</p>
 }
 else
 {
-    <h4>Users</h4>
-    <table>
+ 
+    <div class="position-relative">
+        <h4 class="position-absolute top-50 start-50 translate-middle">Users</h4>
+    </div><br />
+    <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Username</th>
-                <th>Password</th>
                 <th>Email</th>
-                <th>Id</th>
             </tr>
         </thead>
         <tbody>
@@ -28,92 +29,94 @@ else
                     <td>@user.name</td>
                     <td>@user.surname</td>
                     <td>@user.username</td>
-                    <td>@user.password</td>
                     <td>@user.email</td>
-                    <td>@user.id</td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-@*<h4>Pics</h4>
-    <table>
-        <thead>
+<div class="position-relative">
+    <h4 class="position-absolute top-50 start-50 translate-middle">Pics</h4>
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Port Number</th>
+            <th>Building Number</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pic in pics)
+        {
             <tr>
-                <th>Port Number</th>
-                <th>Building Number</th>
-                <th>Status</th>
-                <th>Id</th>
+                <td>@pic.port_number</td>
+                <td>@pic.buildingnumber</td>
+                <td>@pic.status</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var pic in pics)
-            {
-                <tr>
-                    <td>@pic.port_number</td>
-                    <td>@pic.buildingnumber</td>
-                    <td>@pic.status</td>
-                    <td>@pic.id</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <h4>Raspberries</h4>
-    <table>
-        <thead>
+<div class="position-relative">
+    <h4 class="position-absolute top-50 start-50 translate-middle">Raspberries</h4>
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Building Number</th>
+            <th>Building Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var raspberry in raspberries)
+        {
             <tr>
-                <th>Building Number</th>
-                <th>Building Name</th>
-                <th>Id</th>
+                <td>@raspberry.buildingnumber</td>
+                <td>@raspberry.buildingname</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var raspberry in raspberries)
-            {
-                <tr>
-                    <td>@raspberry.buildingnumber</td>
-                    <td>@raspberry.buildingname</td>
-                    <td>@raspberry.id</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <h4>Logs</h4>
-    <table>
-        <thead>
+<div class="position-relative">
+    <h4 class="position-absolute top-50 start-50 translate-middle">Logs</h4>
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Auth Code</th>
+            <th>Unlock Code</th>
+            <th>Opened</th>
+            <th>User Id</th>
+            <th>Pic Id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in logs)
+        {
             <tr>
-                <th>Id</th>
-                <th>Auth Code</th>
-                <th>Unlock Code</th>
-                <th>Opened</th>
-                <th>User Id</th>
-                <th>Pic Id</th>
+                <td>@log.id</td>
+                <td>@log.authcode</td>
+                <td>@log.unlockcode</td>
+                <td>@log.opened</td>
+                <td>@log.user_id</td>
+                <td>@log.pic_id</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var log in logs)
-            {
-                <tr>
-                    <td>@log.id</td>
-                    <td>@log.authcode</td>
-                    <td>@log.unlockcode</td>
-                    <td>@log.opened</td>
-                    <td>@log.user_id</td>
-                    <td>@log.pic_id</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-*@
+        }
+    </tbody>
+</table>
+
 @code {
     private List<UserDto> users = new List<UserDto>();
-    //private List<PicDto> pics = new List<PicDto>();
-    //private List<RaspberryDto> raspberries = new List<RaspberryDto>();
-    //private List<LogDto> logs = new List<LogDto>();
+    private List<PicDto> pics = new List<PicDto>();
+    private List<RaspberryDto> raspberries = new List<RaspberryDto>();
+    private List<LogDto> logs = new List<LogDto>();
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
@@ -122,58 +125,55 @@ else
         var user = authenticationState.User;
         if (authenticationState.User.Identity.IsAuthenticated)
         {
-            var token = user.FindFirst("token")?.Value;
-            if (!string.IsNullOrEmpty(token))
+            string authToken = await localStorage.GetItemAsync<string>("authToken");
+            if (!string.IsNullOrEmpty(authToken))
             {
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
                 await LoadDataAsync();
                 isLoading = false;
             }
         }
     }
 
-    private Users[] user;
-
     private async Task LoadDataAsync()
     {
-        users = await HttpClient.GetFromJsonAsync<Users[]>("https://gruppo6-webapp.azurewebsites.net/api/Users");
-        //pics = await GetPicsAsync();
-        //raspberries = await GetRaspberriesAsync();
-        //logs = await GetLogsAsync();
+        users = await GetUsersAsync();
+        pics = await GetPicsAsync();
+        raspberries = await GetRaspberriesAsync();
+        logs = await GetLogsAsync();
     }
 
-    //private async Task<List<UserDto>> GetUsersAsync()
-    //{
+    private async Task<List<UserDto>> GetUsersAsync()
+    {
+        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Users");
+        response.EnsureSuccessStatusCode();
+        var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+        return users;
+    }
 
-    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Users");
-    //    response.EnsureSuccessStatusCode();
-    //    var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
-    //    return users;
-    //}
+    private async Task<List<PicDto>> GetPicsAsync()
+    {
+        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Pics");
+        response.EnsureSuccessStatusCode();
+        var pics = await response.Content.ReadFromJsonAsync<List<PicDto>>();
+        return pics;
+    }
 
-    //private async Task<List<PicDto>> GetPicsAsync()
-    //{
-    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Pics");
-    //    response.EnsureSuccessStatusCode();
-    //    var pics = await response.Content.ReadFromJsonAsync<List<PicDto>>();
-    //    return pics;
-    //}
+    private async Task<List<RaspberryDto>> GetRaspberriesAsync()
+    {
+        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
+        response.EnsureSuccessStatusCode();
+        var raspberries = await response.Content.ReadFromJsonAsync<List<RaspberryDto>>();
+        return raspberries;
+    }
 
-    //private async Task<List<RaspberryDto>> GetRaspberriesAsync()
-    //{
-    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
-    //    response.EnsureSuccessStatusCode();
-    //    var raspberries = await response.Content.ReadFromJsonAsync<List<RaspberryDto>>();
-    //    return raspberries;
-    //}
-
-    //private async Task<List<LogDto>> GetLogsAsync()
-    //{
-    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs");
-    //    response.EnsureSuccessStatusCode();
-    //    var logs = await response.Content.ReadFromJsonAsync<List<LogDto>>();
-    //    return logs;
-    //}
+    private async Task<List<LogDto>> GetLogsAsync()
+    {
+        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+        response.EnsureSuccessStatusCode();
+        var logs = await response.Content.ReadFromJsonAsync<List<LogDto>>();
+        return logs;
+    }
 
     public class UserDto
     {
@@ -185,28 +185,28 @@ else
         public string id { get; set; }
     }
 
-//    public class PicDto
-//    {
-//        public int port_number { get; set; }
-//        public int buildingnumber { get; set; }
-//        public bool status { get; set; }
-//        public string id { get; set; }
-//    }
+    public class PicDto
+    {
+        public int port_number { get; set; }
+        public int buildingnumber { get; set; }
+        public bool status { get; set; }
+        public string id { get; set; }
+    }
 
-//    public class RaspberryDto
-//    {
-//        public int buildingnumber { get; set; }
-//        public string buildingname { get; set; }
-//        public string id { get; set; }
-//    }
+    public class RaspberryDto
+    {
+        public int buildingnumber { get; set; }
+        public string buildingname { get; set; }
+        public string id { get; set; }
+    }
 
-//    public class LogDto
-//    {
-//        public int authcode { get; set; }
-//        public int unlockcode { get; set; }
-//        public bool opened { get; set; }
-//        public string user_id { get; set; }
-//        public string pic_id { get; set; }
-//        public int id { get; set; }
-//    }
-//}
+    public class LogDto
+    {
+        public int authcode { get; set; }
+        public int unlockcode { get; set; }
+        public bool opened { get; set; }
+        public string user_id { get; set; }
+        public string pic_id { get; set; }
+        public int id { get; set; }
+    }
+}

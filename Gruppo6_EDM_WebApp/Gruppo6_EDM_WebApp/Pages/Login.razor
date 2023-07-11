@@ -1,5 +1,4 @@
 ﻿@page "/login"
-<h3>Login</h3>
 
 @if (ShowAuthError)
 {
@@ -8,27 +7,25 @@
     </div>
 }
 
-<EditForm Model="_userForAuthentication" OnValidSubmit="ExecuteLogin" class="card card-body bg-light mt-5">
+<EditForm Model="_userForAuthentication" OnValidSubmit="ExecuteLogin" class="card card-body bg-light mt-5 w-50" style="display: flex;">
     <DataAnnotationsValidator />
-    <div class="form-group row">
-        <label for="username" class="col-md-2 col-form-label">username:</label>
+    <div class="form-group row mt-1">
+        <label for="username" class="col-md-2 col-form-label">Username:</label>
         <div class="col-md-10">
             <InputText id="username" class="form-control" @bind-Value="_userForAuthentication.username" />
             <ValidationMessage For="@(() => _userForAuthentication.username)" />
         </div>
     </div>
 
-    <div class="form-group row">
-        <label for="password" class="col-md-2 col-form-label">password:</label>
+    <div class="form-group row mt-2">
+        <label for="password" class="col-md-2 col-form-label">Password:</label>
         <div class="col-md-10">
             <InputText type="password" id="password" class="form-control" @bind-Value="_userForAuthentication.password" />
             <ValidationMessage For="@(() => _userForAuthentication.password)" />
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-success">Login</button>
-        </div>
+    <div style="display:flex; align-self: end; margin-top: 10px;">
+            <button type="submit" class="btn btn-success mx-auto">Login</button>
     </div>
 </EditForm>

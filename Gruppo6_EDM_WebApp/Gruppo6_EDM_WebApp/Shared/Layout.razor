@@ -1,16 +1,17 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <div class="page">
 
     <main>
-        <div class="top-row px-4">
+        <div class="top-row px-4 mt-2 position-absolute top-0 end-0">
             <AuthorizeView>
                 <Authorized>
-                    <button type="button" class="btn"><a href="Logout">Log out</a></button>
+                    <button type="button" class="btn btn-primary" @onclick='() => NavigationManager.NavigateTo("/Logout")'>Log out</button>
                 </Authorized>
                 <NotAuthorized>
-                    <button type="button" class="btn"><a href="Registration">Register</a></button>
-                    <button type="button" class="btn"><a href="Login">Log in</a></button>
+                    <button type="button" class="btn btn-primary" @onclick='() => NavigationManager.NavigateTo("/Registration")'>Sign Up</button>
+                    <button type="button" class="btn btn-primary" @onclick='() => NavigationManager.NavigateTo("/Login")'>Log in</button>
                 </NotAuthorized>
             </AuthorizeView>
         </div>

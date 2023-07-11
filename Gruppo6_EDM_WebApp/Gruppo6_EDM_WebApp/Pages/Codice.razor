@@ -1,4 +1,5 @@
 ﻿@page "/codice"
+@inject ILocalStorageService localStorage
 
 <h3>Codice</h3>
 
@@ -34,11 +35,12 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var token = user.FindFirst("token")?.Value;
+            
+            string authToken = await localStorage.GetItemAsync<string>("authToken");
 
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(authToken))
             {
-                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/");
 
