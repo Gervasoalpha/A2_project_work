@@ -9,32 +9,45 @@
         <button @onclick="FetchUnlockCode">Invia richiesta</button>
     </div>
 }
-else
-{
-    <div class="center">
-        @unlockCodeMessage
-    </div>
-}
+<div class="center">
+    @unlockCodeMessage
+</div>
 
 @code {
     private string authCode;
     private string unlockCode;
     private string unlockCodeMessage;
 
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
     private async Task FetchUnlockCode()
     {
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("AuthCode", authCode);
-        var response = await httpClient.PostAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs", null);
 
-        if (response.IsSuccessStatusCode)
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        if (user.Identity.IsAuthenticated)
         {
-            unlockCode = await response.Content.ReadAsStringAsync();
-            unlockCodeMessage = "Codice di sblocco: " + unlockCode;
-        }
-        else
-        {
-            unlockCodeMessage = "Codice inserito sbagliato o scaduto";
+            var token = user.FindFirst("token")?.Value;
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await httpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    unlockCode = await response.Content.ReadAsStringAsync();
+                    unlockCodeMessage = "Codice di sblocco: " + unlockCode;
+                }
+                else
+                {
+                    unlockCodeMessage = "Codice inserito sbagliato o scaduto";
+                }
+            }
         }
     }
 }

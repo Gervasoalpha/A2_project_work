@@ -22,21 +22,54 @@ namespace Gruppo6_EDM_WebApp.Services.AuthProviders.AuthenticationService
         }
         public async Task<AuthResponseDto> Login(UserForAuthenticationDto userForAuthentication)
         {
+            var adminTokenEndpoint = "https://gruppo6-webapp.azurewebsites.net/api/Token/admin";
+            var userTokenEndpoint = "https://gruppo6-webapp.azurewebsites.net/api/Token/user";
+
+            var adminAuthResult = await TryAuthenticate(adminTokenEndpoint, userForAuthentication);
+            if (adminAuthResult.IsSuccessStatusCode)
+            {
+                var isAdmin = true;
+                await HandleSuccessfulAuthentication(adminAuthResult, isAdmin, userForAuthentication);
+                await _localStorage.SetItemAsync("isAdmin", isAdmin);
+                return new AuthResponseDto { IsAuthSuccessful = true };
+            }
+
+            var userAuthResult = await TryAuthenticate(userTokenEndpoint, userForAuthentication);
+            if (userAuthResult.IsSuccessStatusCode)
+            {
+                var isAdmin = false;
+                await HandleSuccessfulAuthentication(userAuthResult, isAdmin, userForAuthentication);
+                await _localStorage.SetItemAsync("isAdmin", isAdmin);
+                return new AuthResponseDto { IsAuthSuccessful = true };
+            }
+
+            var errorResponse = await userAuthResult.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<AuthResponseDto>(errorResponse, _options);
+        }
+
+
+        private async Task<HttpResponseMessage> TryAuthenticate(string endpoint, UserForAuthenticationDto userForAuthentication)
+        {
             var content = JsonSerializer.Serialize(userForAuthentication);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
-            var authResult = await _client.PostAsync("https://gruppo6-webapp.azurewebsites.net/api/Token/user", bodyContent);
+            return await _client.PostAsync(endpoint, bodyContent);
+        }
+
+        private async Task HandleSuccessfulAuthentication(HttpResponseMessage authResult, bool isAdmin, UserForAuthenticationDto userForAuthentication)
+        {
             var authContent = await authResult.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<AuthResponseDto>(authContent, _options);
-            if (!authResult.IsSuccessStatusCode)
-                return result;
             await _localStorage.SetItemAsync("authToken", result.token);
+
             ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(userForAuthentication.username);
+
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.token);
-            return new AuthResponseDto { IsAuthSuccessful = true };
         }
+
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.SetItemAsync("isAdmin", false); // Aggiunta per reimpostare isAdmin a false
             ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
             _client.DefaultRequestHeaders.Authorization = null;
         }
