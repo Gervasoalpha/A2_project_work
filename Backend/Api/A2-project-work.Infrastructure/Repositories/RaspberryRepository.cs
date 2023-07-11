@@ -17,7 +17,8 @@ namespace A2_project_work.Infrastructure.Repositories
             string query = @$"
 SELECT
     id,
-    buildingnumber
+    buildingnumber,
+    buildingname
 FROM
     {classname}
 ";
@@ -30,7 +31,8 @@ FROM
             string query = @$"
 SELECT
     id,
-    buildingnumber
+    buildingnumber,
+    buildingname
 FROM
     {classname}
 WHERE 
@@ -43,8 +45,8 @@ WHERE
         public async override Task InsertAsync(Raspberry entity)
         {
             string query = $@"
-INSERT INTO {classname} (id,buildingnumber)
-VALUES (@id,@buildingnumber)
+INSERT INTO {classname} (id,buildingnumber,buildingname)
+VALUES (@id,@buildingnumber,@buildingname)
 ";
             using var connection = new SqlConnection(_connectionString);
             await connection.ExecuteAsync(query, entity);
@@ -54,8 +56,8 @@ VALUES (@id,@buildingnumber)
         {
 
             string query = $@"
-INSERT INTO {classname} (id,buildingnumber)
-VALUES (NEWID(),@buildingnumber)
+INSERT INTO {classname} (id,buildingnumber,buildingname)
+VALUES (NEWID(),@buildingnumber,@buildingname)
 ";
             using var connection = new SqlConnection(_connectionString);
             await connection.ExecuteAsync(query, entity);
