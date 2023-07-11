@@ -3,96 +3,117 @@
 @inject HttpClient HttpClient
 
 <h3>Administrator</h3>
-
-<h4>Users</h4>
-<table>
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in users)
-        {
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h4>Users</h4>
+    <table>
+        <thead>
             <tr>
-                <td>@user.Username</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Email</th>
+                <th>Id</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.name</td>
+                    <td>@user.surname</td>
+                    <td>@user.username</td>
+                    <td>@user.password</td>
+                    <td>@user.email</td>
+                    <td>@user.id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<h4>Pics</h4>
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Descrizione</th>
-            <th>Data</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var pic in pics)
-        {
+    @*    <h4>Pics</h4>
+    <table>
+        <thead>
             <tr>
-                <td>@pic.Nome</td>
-                <td>@pic.Descrizione</td>
-                <td>@pic.Data</td>
+                <th>Port Number</th>
+                <th>Building Number</th>
+                <th>Status</th>
+                <th>Id</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var pic in pics)
+            {
+                <tr>
+                    <td>@pic.port_number</td>
+                    <td>@pic.buildingnumber</td>
+                    <td>@pic.status</td>
+                    <td>@pic.id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<h4>Raspberries</h4>
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Modello</th>
-            <th>Versione</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var raspberry in raspberries)
-        {
+    <h4>Raspberries</h4>
+    <table>
+        <thead>
             <tr>
-                <td>@raspberry.Nome</td>
-                <td>@raspberry.Modello</td>
-                <td>@raspberry.Versione</td>
+                <th>Building Number</th>
+                <th>Building Name</th>
+                <th>Id</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var raspberry in raspberries)
+            {
+                <tr>
+                    <td>@raspberry.buildingnumber</td>
+                    <td>@raspberry.buildingname</td>
+                    <td>@raspberry.id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<h4>Logs</h4>
-<table>
-    <thead>
-        <tr>
-            <th>Messaggio</th>
-            <th>Livello</th>
-            <th>Data</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var log in logs)
-        {
+    <h4>Logs</h4>
+    <table>
+        <thead>
             <tr>
-                <td>@log.Messaggio</td>
-                <td>@log.Livello</td>
-                <td>@log.Data</td>
+                <th>Id</th>
+                <th>Auth Code</th>
+                <th>Unlock Code</th>
+                <th>Opened</th>
+                <th>User Id</th>
+                <th>Pic Id</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var log in logs)
+            {
+                <tr>
+                    <td>@log.id</td>
+                    <td>@log.authcode</td>
+                    <td>@log.unlockcode</td>
+                    <td>@log.opened</td>
+                    <td>@log.user_id</td>
+                    <td>@log.pic_id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}*@
 
-@code {
-    private List<UserDto> users;
-    private List<PicDto> pics;
-    private List<RaspberryDto> raspberries;
-    private List<LogDto> logs;
+    @code {
+    private List<UserDto> users = new List<UserDto>();
+    private List<PicDto> pics = new List<PicDto>();
+    private List<RaspberryDto> raspberries = new List<RaspberryDto>();
+    private List<LogDto> logs = new List<LogDto>();
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,43 +122,88 @@
         if (authenticationState.User.Identity.IsAuthenticated)
         {
             var token = user.FindFirst("token")?.Value;
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             if (!string.IsNullOrEmpty(token))
             {
                 HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                users = await HttpClient.GetFromJsonAsync<List<UserDto>>("https://gruppo6-webapp.azurewebsites.net/api/Users");
-                pics = await HttpClient.GetFromJsonAsync<List<PicDto>>("https://gruppo6-webapp.azurewebsites.net/api/Pics");
-                raspberries = await HttpClient.GetFromJsonAsync<List<RaspberryDto>>("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
-                logs = await HttpClient.GetFromJsonAsync<List<LogDto>>("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+                await LoadDataAsync();
+                isLoading = false;
             }
         }
     }
 
+    private async Task LoadDataAsync()
+    {
+        users = await GetUsersAsync();
+        //pics = await GetPicsAsync();
+        //raspberries = await GetRaspberriesAsync();
+        //logs = await GetLogsAsync();
+    }
+
+    private async Task<List<UserDto>> GetUsersAsync()
+    {
+
+        var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Users");
+        response.EnsureSuccessStatusCode();
+        var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+        return users;
+    }
+
+    //private async Task<List<PicDto>> GetPicsAsync()
+    //{
+    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Pics");
+    //    response.EnsureSuccessStatusCode();
+    //    var pics = await response.Content.ReadFromJsonAsync<List<PicDto>>();
+    //    return pics;
+    //}
+
+    //private async Task<List<RaspberryDto>> GetRaspberriesAsync()
+    //{
+    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
+    //    response.EnsureSuccessStatusCode();
+    //    var raspberries = await response.Content.ReadFromJsonAsync<List<RaspberryDto>>();
+    //    return raspberries;
+    //}
+
+    //private async Task<List<LogDto>> GetLogsAsync()
+    //{
+    //    var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+    //    response.EnsureSuccessStatusCode();
+    //    var logs = await response.Content.ReadFromJsonAsync<List<LogDto>>();
+    //    return logs;
+    //}
+
     public class UserDto
     {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        public string name { get; set; }
+        public string surname { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string email { get; set; }
+        public string id { get; set; }
     }
 
     public class PicDto
     {
-        public string Nome { get; set; }
-        public string Descrizione { get; set; }
-        public DateTime Data { get; set; }
+        public int port_number { get; set; }
+        public int buildingnumber { get; set; }
+        public bool status { get; set; }
+        public string id { get; set; }
     }
 
     public class RaspberryDto
     {
-        public string Nome { get; set; }
-        public string Modello { get; set; }
-        public string Versione { get; set; }
+        public int buildingnumber { get; set; }
+        public string buildingname { get; set; }
+        public string id { get; set; }
     }
 
     public class LogDto
     {
-        public string Messaggio { get; set; }
-        public string Livello { get; set; }
-        public DateTime Data { get; set; }
+        public int authcode { get; set; }
+        public int unlockcode { get; set; }
+        public bool opened { get; set; }
+        public string user_id { get; set; }
+        public string pic_id { get; set; }
+        public int id { get; set; }
     }
 }
