@@ -1,6 +1,6 @@
 ﻿@page "/administrator"
-@attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
 
 <h3>Administrator</h3>
 
@@ -93,18 +93,23 @@
     private List<PicDto> pics;
     private List<RaspberryDto> raspberries;
     private List<LogDto> logs;
-    private AuthenticationState authState;
 
     protected override async Task OnInitializedAsync()
     {
-        authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authState.User.Identity.IsAuthenticated)
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+        if (authenticationState.User.Identity.IsAuthenticated)
         {
-            var httpClient = new HttpClient();
-            users = await httpClient.GetFromJsonAsync<List<UserDto>>("https://gruppo6-webapp.azurewebsites.net/api/Users");
-            pics = await httpClient.GetFromJsonAsync<List<PicDto>>("https://gruppo6-webapp.azurewebsites.net/api/Pics");
-            raspberries = await httpClient.GetFromJsonAsync<List<RaspberryDto>>("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
-            logs = await httpClient.GetFromJsonAsync<List<LogDto>>("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+            var token = user.FindFirst("token")?.Value;
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if (!string.IsNullOrEmpty(token))
+            {
+                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                users = await HttpClient.GetFromJsonAsync<List<UserDto>>("https://gruppo6-webapp.azurewebsites.net/api/Users");
+                pics = await HttpClient.GetFromJsonAsync<List<PicDto>>("https://gruppo6-webapp.azurewebsites.net/api/Pics");
+                raspberries = await HttpClient.GetFromJsonAsync<List<RaspberryDto>>("https://gruppo6-webapp.azurewebsites.net/api/Raspberries");
+                logs = await HttpClient.GetFromJsonAsync<List<LogDto>>("https://gruppo6-webapp.azurewebsites.net/api/Logs");
+            }
         }
     }
 

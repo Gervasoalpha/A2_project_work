@@ -25,7 +25,7 @@ namespace Gruppo6_EDM_WebApp.Services.AuthProviders
             if (string.IsNullOrWhiteSpace(token))
                 return _anonymous;
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(token), "jwtAuthType")));
         }

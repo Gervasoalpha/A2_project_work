@@ -9,9 +9,12 @@
         <button @onclick="FetchUnlockCode">Invia richiesta</button>
     </div>
 }
-<div class="center">
-    @unlockCodeMessage
-</div>
+@if (!string.IsNullOrEmpty(unlockCodeMessage))
+{
+    <div class="center">
+        @unlockCodeMessage
+    </div>
+}
 
 @code {
     private string authCode;
@@ -19,12 +22,13 @@
     private string unlockCodeMessage;
 
     [Inject]
+    private HttpClient HttpClient { get; set; }
+
+    [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     private async Task FetchUnlockCode()
     {
-        var httpClient = new HttpClient();
-
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authenticationState.User;
 
@@ -34,9 +38,9 @@
 
             if (!string.IsNullOrEmpty(token))
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var response = await httpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/");
+                var response = await HttpClient.GetAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/unlock/");
 
                 if (response.IsSuccessStatusCode)
                 {
