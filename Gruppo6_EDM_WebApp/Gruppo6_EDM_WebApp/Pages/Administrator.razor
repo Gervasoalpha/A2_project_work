@@ -93,8 +93,8 @@ else
             <th>Auth Code</th>
             <th>Unlock Code</th>
             <th>Opened</th>
-            <th>User Id</th>
-            <th>Pic Id</th>
+            <th>Username</th>
+            <th>Numero Porta</th>
         </tr>
     </thead>
     <tbody>
@@ -105,8 +105,8 @@ else
                 <td>@log.authcode</td>
                 <td>@log.unlockcode</td>
                 <td>@log.opened</td>
-                <td>@log.user_id</td>
-                <td>@log.pic_id</td>
+                <td>@log.username</td>
+                <td>@log.portnumber</td>
             </tr>
         }
     </tbody>
@@ -205,8 +205,8 @@ else
         public int authcode { get; set; }
         public int unlockcode { get; set; }
         public bool opened { get; set; }
-        public string user_id { get; set; }
-        public string pic_id { get; set; }
+        public string username { get; set; }
+        public int portnumber { get; set; }
         public int id { get; set; }
     }
 }

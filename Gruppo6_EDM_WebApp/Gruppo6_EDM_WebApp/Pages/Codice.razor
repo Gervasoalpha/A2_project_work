@@ -1,4 +1,5 @@
 ﻿@page "/codice"
+@using System.Text.Json;
 @inject ILocalStorageService localStorage
 
 <h3>Codice</h3>
@@ -35,7 +36,7 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            
+
             string authToken = await localStorage.GetItemAsync<string>("authToken");
 
             if (!string.IsNullOrEmpty(authToken))
@@ -48,6 +49,8 @@
                 {
                     unlockCode = await response.Content.ReadAsStringAsync();
                     unlockCodeMessage = "Codice di sblocco: " + unlockCode;
+                    //var body = JsonSerializer.Serialize($"'authcode':{authCode}, 'username':{user}");
+                    //await HttpClient.PutAsync("https://gruppo6-webapp.azurewebsites.net/api/Logs/updateusername", body);
                 }
                 else
                 {
