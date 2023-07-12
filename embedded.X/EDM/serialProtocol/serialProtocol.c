@@ -111,9 +111,6 @@ void ReadMessage()
 					// GOTO WAIT_AUTH_CODE
 					sendMessage(PROTO_REQ_AUTH_CODE, NULL);
 					deviceState = WAIT_AUTH_CODE; // !!!START TIMEOUT!!!
-
-					LcdClear();
-					LcdSendString(LOADING_STRING);
 					break;
 				}
 
@@ -147,7 +144,6 @@ void ReadMessage()
 			LcdClear();
 			LcdSendString(payloadString);
 			LcdSendString("  ");
-			__delay_ms(2000);
 			deviceState = WAIT_USER_UNLOCK_CODE; // !!!START TIMEOUT!!!
 			break;
 		}
@@ -160,6 +156,9 @@ void ReadMessage()
 				// GOTO IDLE
 				LcdClear();
 				LcdSendString("PORTA APERTA");
+				__delay_ms(3000);
+				LcdClear();
+				LcdSendString(WELCOME_STRING);
 				deviceState = IDLE;
 			} else
 			{
@@ -175,7 +174,8 @@ void ReadMessage()
 			{
 				// GOTO IDLE? 
 				LcdClear();
-				LcdSendString("CASIN");
+				LcdSendString("ERRORE");
+				__delay_ms(3000);
 				LcdClear();
 				LcdSendString(WELCOME_STRING);
 				deviceState = IDLE;
@@ -215,6 +215,7 @@ void ReadUserInput()
 		if (digit == '#') // end of input => goto SEND_USER_UNLOCK_CODE
 		{
 			LcdClear();
+			LcdSendString(LOADING_STRING);
 			deviceState = SEND_USER_UNLOCK_CODE;
 		} else if (digit >= '0' && digit <= '9')
 		{
