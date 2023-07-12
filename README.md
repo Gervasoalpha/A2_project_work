@@ -15,3 +15,8 @@ Branch => NizzettoD
 ### EMBEDDED - PROTOCOLLO
 
 Branch => GranzottoA
+
+## Link Utili
+
+[Board Miro: workflow, documentazione DB e Gateway](https://miro.com/app/board/uXjVMObWSJ4=/?share_link_id=906390832120)
+
