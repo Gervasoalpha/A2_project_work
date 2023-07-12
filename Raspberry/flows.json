@@ -1,0 +1,1325 @@
+[
+    {
+        "id": "474af3210c023a83",
+        "type": "tab",
+        "label": "ProjectWork",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "afe90cac19d6be75",
+        "type": "switch",
+        "z": "474af3210c023a83",
+        "name": "Switch",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "5",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 1630,
+        "y": 720,
+        "wires": [
+            [
+                "176de13e26265119"
+            ],
+            [
+                "9cc3fd4c1a801ed1",
+                "71688b88eaa5c3d5"
+            ],
+            [
+                "64d9f1ba8d502a19"
+            ]
+        ]
+    },
+    {
+        "id": "b285daac8e16d87f",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Function/Id Pic Extraction",
+        "func": "msg.data = msg.payload;\nlet Num_funzione = msg.payload.split(\";\")[1]\nmsg.payload = Num_funzione;\nmsg.idpic = msg.data;\nlet pic = msg.idpic.split(\";\")[0]\nmsg.idpic = pic;\nglobal.set(\"idpic\", pic);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1410,
+        "y": 720,
+        "wires": [
+            [
+                "afe90cac19d6be75"
+            ]
+        ]
+    },
+    {
+        "id": "9cc3fd4c1a801ed1",
+        "type": "random",
+        "z": "474af3210c023a83",
+        "name": "Auth Code Generator",
+        "low": "10000",
+        "high": "99999",
+        "inte": "true",
+        "property": "code",
+        "x": 1880,
+        "y": 720,
+        "wires": [
+            [
+                "f569e22239ddab7b",
+                "5ba5d2235f7db42c"
+            ]
+        ]
+    },
+    {
+        "id": "764acad5cbb5b38b",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "New Pic To Db",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": "3",
+        "outputs": 1,
+        "x": 2600,
+        "y": 580,
+        "wires": [
+            [
+                "5b648063865dba15"
+            ]
+        ]
+    },
+    {
+        "id": "a757fb55cee68ac9",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "let idpic = msg.data.split(\";\")[0]\nconst d = new Date();\nlet ora= d.getTime();\nmsg.query = `INSERT INTO log(idpic, stato, ora) VALUES( ${idpic}, 'vivo', ${ora});`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2410,
+        "y": 580,
+        "wires": [
+            [
+                "764acad5cbb5b38b"
+            ]
+        ]
+    },
+    {
+        "id": "9e2867904e952f7c",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Pic Status Update",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": "3",
+        "outputs": 1,
+        "x": 2610,
+        "y": 660,
+        "wires": [
+            [
+                "69ca524c85d154dd"
+            ]
+        ]
+    },
+    {
+        "id": "f8536aa0e77745f7",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "let idpic = msg.data.split(\";\")[0];\nconst d = new Date();\nlet ora= d.getTime();\nmsg.query = `UPDATE log SET ora = ${ora}, stato = 'vivo' WHERE idpic = ${idpic};`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2410,
+        "y": 660,
+        "wires": [
+            [
+                "9e2867904e952f7c"
+            ]
+        ]
+    },
+    {
+        "id": "176de13e26265119",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Id Pic Checker",
+        "query": "SELECT idpic FROM log WHERE idpic={{{ msg.idpic }}};",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": "3",
+        "outputs": 1,
+        "x": 1860,
+        "y": 620,
+        "wires": [
+            [
+                "1ec5ab62e719d604"
+            ]
+        ]
+    },
+    {
+        "id": "3ad6fbdf933b57d1",
+        "type": "switch",
+        "z": "474af3210c023a83",
+        "name": "Switch",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "idpic",
+                "vt": "msg"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 2210,
+        "y": 620,
+        "wires": [
+            [
+                "a757fb55cee68ac9"
+            ],
+            [
+                "f8536aa0e77745f7"
+            ]
+        ]
+    },
+    {
+        "id": "1ec5ab62e719d604",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Payload To String",
+        "func": "if(msg.payload.length==0)\n{\n    let dbpic = 0;\n    msg.payload = dbpic;\n}\nelse\n{\n    let dbpic = msg.payload[0].idpic;\n    msg.payload = dbpic;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2050,
+        "y": 620,
+        "wires": [
+            [
+                "3ad6fbdf933b57d1"
+            ]
+        ]
+    },
+    {
+        "id": "f569e22239ddab7b",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Code to Serial",
+        "func": "msg.payload = `${msg.idpic};4;${msg.code};F2DC`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2100,
+        "y": 720,
+        "wires": [
+            [
+                "493e224f8aea4477"
+            ]
+        ]
+    },
+    {
+        "id": "555f5b876a6b1115",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Pic Status Update",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 730,
+        "y": 1200,
+        "wires": [
+            [
+                "54ebb68c07d12c2c"
+            ]
+        ]
+    },
+    {
+        "id": "85bf5045206df168",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "const d = new Date();\nlet ora = d.getTime();\nmsg.query = `UPDATE log SET ora = ${ora};`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 1200,
+        "wires": [
+            [
+                "555f5b876a6b1115"
+            ]
+        ]
+    },
+    {
+        "id": "459b02c6ead9907b",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Pics Extraction",
+        "query": "SELECT idpic FROM log;",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 620,
+        "y": 780,
+        "wires": [
+            [
+                "88a372f9590e86b1"
+            ]
+        ]
+    },
+    {
+        "id": "71688b88eaa5c3d5",
+        "type": "random",
+        "z": "474af3210c023a83",
+        "name": "Unlock Code Generator",
+        "low": "10000",
+        "high": "99999",
+        "inte": "true",
+        "property": "code",
+        "x": 1890,
+        "y": 800,
+        "wires": [
+            [
+                "5ba5d2235f7db42c"
+            ]
+        ]
+    },
+    {
+        "id": "5ba5d2235f7db42c",
+        "type": "join",
+        "z": "474af3210c023a83",
+        "name": "Code Merger",
+        "mode": "custom",
+        "build": "array",
+        "property": "code",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 2130,
+        "y": 800,
+        "wires": [
+            [
+                "5bf9b9506704dc98",
+                "7af38e633122e255"
+            ]
+        ]
+    },
+    {
+        "id": "5bf9b9506704dc98",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Iot Hub Payload Assembler",
+        "func": "msg.payload = {\n    \"deviceId\": `${global.get(\"deviceId\")}`,\n    \"key\": `${global.get(\"iotHubKey\")}`,\n    \"protocol\": `${global.get(\"protocol\")}`,\n    \"data\": {\n        UnlockCode: `${msg.code[1]}`,\n        AuthCode: `${msg.code[0]}`,\n        PortNumber: parseInt(msg.idpic),\n        BuildingNumber: global.get(\"idrasp\")\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2360,
+        "y": 800,
+        "wires": [
+            [
+                "dd66fe525a245616",
+                "d35c3b1c0f707401"
+            ]
+        ]
+    },
+    {
+        "id": "dd66fe525a245616",
+        "type": "azureiothub",
+        "z": "474af3210c023a83",
+        "name": "Azure IoT Hub",
+        "protocol": "amqp",
+        "x": 2580,
+        "y": 800,
+        "wires": [
+            [
+                "d35c3b1c0f707401",
+                "aa03c438d420cf0f"
+            ]
+        ]
+    },
+    {
+        "id": "7af38e633122e255",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "let idpic = global.get(\"idpic\")\nmsg.query = `INSERT INTO code(idpic, authCode, unlockCode) VALUES (${idpic},${msg.code[0]},${msg.code[1]})`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2350,
+        "y": 860,
+        "wires": [
+            [
+                "5a73aac8504866bd"
+            ]
+        ]
+    },
+    {
+        "id": "5a73aac8504866bd",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Code To Db",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 2530,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "64d9f1ba8d502a19",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "msg.query= `SELECT * FROM code WHERE idpic=${msg.idpic}`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1870,
+        "y": 920,
+        "wires": [
+            [
+                "120e35c4418415ad"
+            ]
+        ]
+    },
+    {
+        "id": "120e35c4418415ad",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Code From Db",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 2060,
+        "y": 920,
+        "wires": [
+            [
+                "600a2933fbb1eba0"
+            ]
+        ]
+    },
+    {
+        "id": "600a2933fbb1eba0",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Code Verificator",
+        "func": "let userunlockcode = msg.data.split(\";\")[2];\nlet unlockcode = msg.payload[0].unlockcode;\nif(userunlockcode == unlockcode)\n{\n    msg.procedure = true;\n}\nelse\n{\n    msg.procedure = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2240,
+        "y": 920,
+        "wires": [
+            [
+                "672c9750e5954ff6",
+                "64868e469d921e90"
+            ]
+        ]
+    },
+    {
+        "id": "672c9750e5954ff6",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Code Verificator Serial",
+        "func": "let userunlockcode = msg.data.split(\";\")[2];\nlet unlockcode = msg.payload[0].unlockcode;\nif(msg.procedure)\n{\n    msg.payload = `${msg.idpic};6;F2DC`;\n}\nelse\n{\n    msg.payload = `${msg.idpic};7;F2DC`;    \n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2460,
+        "y": 920,
+        "wires": [
+            [
+                "f7292472ea370278"
+            ]
+        ]
+    },
+    {
+        "id": "64868e469d921e90",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Code Verificator Iot Hub",
+        "func": "let userunlockcode = msg.data.split(\";\")[2];\nlet unlockcode = msg.payload[0].unlockcode;\nlet idpic = global.get(\"idpic\")\nlet idrasp = global.get(\"idrasp\")\nif(msg.procedure)\n{\n    msg.payload = {\n        \"deviceId\": `${global.get(\"devideId\")}`,\n        \"key\": `${global.get(\"iotHubKey\")}`,\n        \"protocol\": `${global.get(\"protocol\")}`,\n        \"data\": {\n            Info: \"opened\",\n            PortNumber: idpic,\n            BuildingNumber: idrasp\n        }\n    }\n}\nelse\n{\n    msg.payload = {\n        \"deviceId\": `${global.get(\"devideId\")}`,\n        \"key\": `${global.get(\"iotHubKey\")}`,\n        \"protocol\": `${global.get(\"protocol\")}`,\n        \"data\": {\n            Info: \"not opened\",\n            PortNumber: idpic,\n            BuildingNumber: idrasp\n        }\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2490,
+        "y": 980,
+        "wires": [
+            [
+                "469dad939c95c8f6"
+            ]
+        ]
+    },
+    {
+        "id": "73bb43901f08dd46",
+        "type": "serial request",
+        "z": "474af3210c023a83",
+        "name": "Serial",
+        "serial": "a0fac19868d59731",
+        "x": 950,
+        "y": 780,
+        "wires": [
+            [
+                "c24a3599eaf17954",
+                "f5b37bafb1eccafb"
+            ]
+        ]
+    },
+    {
+        "id": "c24a3599eaf17954",
+        "type": "switch",
+        "z": "474af3210c023a83",
+        "name": "Check Serial Response",
+        "property": "status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "OK",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ERR_TIMEOUT",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1130,
+        "y": 780,
+        "wires": [
+            [
+                "b285daac8e16d87f"
+            ],
+            [
+                "5754a18717026118"
+            ]
+        ]
+    },
+    {
+        "id": "5754a18717026118",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Reset Request",
+        "mode": "link",
+        "links": [
+            "756eebcd0953ab51"
+        ],
+        "x": 1380,
+        "y": 820,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "756eebcd0953ab51",
+        "type": "link in",
+        "z": "474af3210c023a83",
+        "name": "Request Out",
+        "links": [
+            "388fff0278d4472a",
+            "47a4c5e7b5416158",
+            "5754a18717026118",
+            "592ba0d15817aaf1",
+            "69ca524c85d154dd",
+            "7d708384d0a02511",
+            "987c6c0e81d35657",
+            "aa03c438d420cf0f",
+            "3616a6636b3f1523"
+        ],
+        "x": 110,
+        "y": 780,
+        "wires": [
+            [
+                "9625554c9d9b8cf3"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "592ba0d15817aaf1",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Reset Request",
+        "mode": "link",
+        "links": [
+            "756eebcd0953ab51"
+        ],
+        "x": 3180,
+        "y": 580,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "69ca524c85d154dd",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Reset Request",
+        "mode": "link",
+        "links": [
+            "756eebcd0953ab51"
+        ],
+        "x": 2800,
+        "y": 660,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "aa03c438d420cf0f",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Reset Request",
+        "mode": "link",
+        "links": [
+            "756eebcd0953ab51"
+        ],
+        "x": 2920,
+        "y": 800,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "633611b4f8764c34",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Loop Starter",
+        "mode": "link",
+        "links": [
+            "20c8cb0bb1ca2368",
+            "9cb08ce79563f78f"
+        ],
+        "x": 1490,
+        "y": 540,
+        "wires": [],
+        "icon": "font-awesome/fa-power-off",
+        "l": true
+    },
+    {
+        "id": "9cb08ce79563f78f",
+        "type": "link in",
+        "z": "474af3210c023a83",
+        "name": "Loop Starter Receiver",
+        "links": [
+            "633611b4f8764c34"
+        ],
+        "x": 140,
+        "y": 840,
+        "wires": [
+            [
+                "217fbcfdf03558ce"
+            ]
+        ],
+        "icon": "font-awesome/fa-power-off",
+        "l": true
+    },
+    {
+        "id": "f4fae9d32d4afdd6",
+        "type": "start-up-trigger",
+        "z": "474af3210c023a83",
+        "x": 120,
+        "y": 540,
+        "wires": [
+            [
+                "5b7b3a960b04e737"
+            ]
+        ]
+    },
+    {
+        "id": "217fbcfdf03558ce",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Reset Variables",
+        "func": "msg = {};\nglobal.set(\"idpic\", null);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 780,
+        "wires": [
+            [
+                "459b02c6ead9907b"
+            ]
+        ]
+    },
+    {
+        "id": "88a372f9590e86b1",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Code To Serial",
+        "func": "global.set(\"pics\", msg.payload)\nlet count = global.get(\"count\")\nif (count >= msg.payload.lenght) count = 0;\n\nlet pic = msg.payload[count].idpic\nmsg.payload = `${pic};1;;F2DC`;\n\nglobal.set(\"count\", count++);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 780,
+        "wires": [
+            [
+                "73bb43901f08dd46",
+                "f5b37bafb1eccafb"
+            ]
+        ]
+    },
+    {
+        "id": "229385464e4892d0",
+        "type": "http request",
+        "z": "474af3210c023a83",
+        "name": "Https Token Request",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "query",
+        "url": "https://gruppo6-webapp.azurewebsites.net/api/Token/raspberry",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1120,
+        "y": 540,
+        "wires": [
+            [
+                "22c9f9885d3b5ac7"
+            ]
+        ]
+    },
+    {
+        "id": "3553be77ee254c5d",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "HTTPS Url Assembler",
+        "func": "msg.payload = {\n    \"buildingnumber\": `${global.get(\"idrasp\")}`,\n    \"password\": `${global.get(\"tokenPsw\")}`\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 540,
+        "wires": [
+            [
+                "229385464e4892d0"
+            ]
+        ]
+    },
+    {
+        "id": "22c9f9885d3b5ac7",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Token Parser",
+        "func": "let tokenString = msg.payload;\nconst tokenObject = JSON.parse(tokenString);\nconst token = tokenObject.token;\nglobal.set(\"Token\", token);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1310,
+        "y": 540,
+        "wires": [
+            [
+                "633611b4f8764c34"
+            ]
+        ]
+    },
+    {
+        "id": "5b648063865dba15",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Https  Payload Assembler",
+        "func": "msg.payload = {\n    \"port_number\": global.get(\"idpic\"),\n    \"buildingnumber\": global.get(\"idrasp\")\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2810,
+        "y": 580,
+        "wires": [
+            [
+                "d85f5ead2f4d0149"
+            ]
+        ]
+    },
+    {
+        "id": "d85f5ead2f4d0149",
+        "type": "http request",
+        "z": "474af3210c023a83",
+        "name": "Http Request",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://gruppo6-webapp.azurewebsites.net/api/Pics",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 3010,
+        "y": 580,
+        "wires": [
+            [
+                "592ba0d15817aaf1"
+            ]
+        ]
+    },
+    {
+        "id": "20c8cb0bb1ca2368",
+        "type": "link in",
+        "z": "474af3210c023a83",
+        "name": "Loop Starter Receiver",
+        "links": [
+            "633611b4f8764c34"
+        ],
+        "x": 160,
+        "y": 1140,
+        "wires": [
+            []
+        ],
+        "icon": "font-awesome/fa-power-off",
+        "l": true
+    },
+    {
+        "id": "4a587b17dc6bb753",
+        "type": "link in",
+        "z": "474af3210c023a83",
+        "name": "Request Out",
+        "links": [
+            "ef570301e294805e"
+        ],
+        "x": 130,
+        "y": 1200,
+        "wires": [
+            [
+                "906969bf793e199d"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "ef570301e294805e",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Request In",
+        "mode": "link",
+        "links": [
+            "4a587b17dc6bb753"
+        ],
+        "x": 2390,
+        "y": 1160,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "906969bf793e199d",
+        "type": "delay",
+        "z": "474af3210c023a83",
+        "name": "Delay",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 1200,
+        "wires": [
+            [
+                "85bf5045206df168"
+            ]
+        ]
+    },
+    {
+        "id": "3616a6636b3f1523",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Reset Request",
+        "mode": "link",
+        "links": [
+            "756eebcd0953ab51"
+        ],
+        "x": 3160,
+        "y": 920,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "469dad939c95c8f6",
+        "type": "azureiothub",
+        "z": "474af3210c023a83",
+        "name": "Azure IoT Hub",
+        "protocol": "amqp",
+        "x": 2700,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "493e224f8aea4477",
+        "type": "serial request",
+        "z": "474af3210c023a83",
+        "name": "Serial",
+        "serial": "a0fac19868d59731",
+        "x": 2250,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f7292472ea370278",
+        "type": "serial request",
+        "z": "474af3210c023a83",
+        "name": "Serial",
+        "serial": "a0fac19868d59731",
+        "x": 2630,
+        "y": 920,
+        "wires": [
+            [
+                "6d33ed3a7fc2116e"
+            ]
+        ]
+    },
+    {
+        "id": "54ebb68c07d12c2c",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Pics Extraction",
+        "query": "SELECT idpic FROM log;",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 920,
+        "y": 1200,
+        "wires": [
+            [
+                "57a75a60945a32b6"
+            ]
+        ]
+    },
+    {
+        "id": "5b5ad38d36efebdd",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Iot Hub Payload Assembler",
+        "func": "let pic = global.get(\"picarray\")[global.get(\"count2\")]\nmsg.query = `SELECT idpic, stato FROM log WHERE idpic = ${pic};`;\nlet count = global.get(\"count2\") + 1;\nglobal.set(\"count\", count)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1360,
+        "y": 1200,
+        "wires": [
+            [
+                "5a5a1d05898cbd9d"
+            ]
+        ]
+    },
+    {
+        "id": "1824a685bf991f97",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Iot Hub Payload Assembler",
+        "func": "let idpic = msg.payload[0].idpic;\nlet status = msg.payload[0].stato;\nmsg.payload = {\n    \"deviceId\": `${global.get(\"devideId\")}`,\n    \"key\": `${global.get(\"iotHubKey\")}`,\n    \"protocol\": `${global.get(\"protocol\")}`,\n    \"data\": {\n        Status: `${status}`,\n        PortNumber: idpic,\n        BuildingNumber: global.get(\"idrasp\")\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1840,
+        "y": 1200,
+        "wires": [
+            [
+                "4dcc4c5db1207b1a"
+            ]
+        ]
+    },
+    {
+        "id": "5a5a1d05898cbd9d",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Pic Status/id Extractor",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1600,
+        "y": 1200,
+        "wires": [
+            [
+                "1824a685bf991f97"
+            ]
+        ]
+    },
+    {
+        "id": "4dcc4c5db1207b1a",
+        "type": "azureiothub",
+        "z": "474af3210c023a83",
+        "name": "Azure IoT Hub",
+        "protocol": "amqp",
+        "x": 2060,
+        "y": 1200,
+        "wires": [
+            [
+                "0e5dac0845559996"
+            ]
+        ]
+    },
+    {
+        "id": "0e5dac0845559996",
+        "type": "switch",
+        "z": "474af3210c023a83",
+        "name": "",
+        "property": "count2",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "picarraylength",
+                "vt": "global"
+            },
+            {
+                "t": "lt",
+                "v": "picarraylength",
+                "vt": "global"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 2210,
+        "y": 1200,
+        "wires": [
+            [
+                "ef570301e294805e"
+            ],
+            [
+                "0784bff4ebcac875"
+            ]
+        ]
+    },
+    {
+        "id": "57a75a60945a32b6",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Global Variable Set",
+        "func": "global.set(\"picarray\", msg.payload)\nglobal.set(\"picarraylength\", global.get(\"picarray\").length)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 1200,
+        "wires": [
+            [
+                "5b5ad38d36efebdd"
+            ]
+        ]
+    },
+    {
+        "id": "bab8fa7188d8d59f",
+        "type": "link in",
+        "z": "474af3210c023a83",
+        "name": "Loop Array Out",
+        "links": [
+            "0784bff4ebcac875"
+        ],
+        "x": 1100,
+        "y": 1240,
+        "wires": [
+            [
+                "5b5ad38d36efebdd"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "0784bff4ebcac875",
+        "type": "link out",
+        "z": "474af3210c023a83",
+        "name": "Loop Array In",
+        "mode": "link",
+        "links": [
+            "bab8fa7188d8d59f"
+        ],
+        "x": 2390,
+        "y": 1240,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "6d33ed3a7fc2116e",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Query Assembler",
+        "func": "msg.query = `DELETE FROM code WHERE idpic=${global.get(\"idpic\")};`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2790,
+        "y": 920,
+        "wires": [
+            [
+                "7b0d09ec70a1cc7b"
+            ]
+        ]
+    },
+    {
+        "id": "7b0d09ec70a1cc7b",
+        "type": "postgresql",
+        "z": "474af3210c023a83",
+        "name": "Code Remover",
+        "query": "",
+        "postgreSQLConfig": "aa0bea1b94261ffc",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 2980,
+        "y": 920,
+        "wires": [
+            [
+                "3616a6636b3f1523"
+            ]
+        ]
+    },
+    {
+        "id": "5b7b3a960b04e737",
+        "type": "file in",
+        "z": "474af3210c023a83",
+        "name": "Read Conf FIle",
+        "filename": "/usr/raspconf.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 320,
+        "y": 540,
+        "wires": [
+            [
+                "4d27fef2203ca618"
+            ]
+        ]
+    },
+    {
+        "id": "4d27fef2203ca618",
+        "type": "json",
+        "z": "474af3210c023a83",
+        "name": "String To Json",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 500,
+        "y": 540,
+        "wires": [
+            [
+                "ba05159ffe58d3cb"
+            ]
+        ]
+    },
+    {
+        "id": "ba05159ffe58d3cb",
+        "type": "function",
+        "z": "474af3210c023a83",
+        "name": "Global Startup Set",
+        "func": "global.set(\"deviceId\", msg.payload.DeviceId);\nglobal.set(\"protocol\", msg.payload.Protocol);\nglobal.set(\"iotHubKey\", msg.payload.Key);\nglobal.set(\"idrasp\", msg.payload.RaspId);\nglobal.set(\"tokenPsw\", msg.payload.TokenPassword);\nglobal.set(\"count\", 0);\nglobal.set(\"count2\", 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 540,
+        "wires": [
+            [
+                "3553be77ee254c5d"
+            ]
+        ]
+    },
+    {
+        "id": "9625554c9d9b8cf3",
+        "type": "delay",
+        "z": "474af3210c023a83",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "4",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 260,
+        "y": 780,
+        "wires": [
+            [
+                "217fbcfdf03558ce"
+            ]
+        ]
+    },
+    {
+        "id": "d35c3b1c0f707401",
+        "type": "debug",
+        "z": "474af3210c023a83",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2720,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "f5b37bafb1eccafb",
+        "type": "debug",
+        "z": "474af3210c023a83",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "aa0bea1b94261ffc",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "log_pic",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "pi",
+        "userFieldType": "str",
+        "password": "raspberrypi",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "a0fac19868d59731",
+        "type": "serial-port",
+        "serialport": "/dev/ttyUSB0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "\\n",
+        "responsetimeout": "1000"
+    }
+]
