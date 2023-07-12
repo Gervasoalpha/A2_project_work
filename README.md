@@ -20,3 +20,4 @@ Branch => GranzottoA
 
 [Board Miro: workflow, documentazione DB e Gateway](https://miro.com/app/board/uXjVMObWSJ4=/?share_link_id=906390832120)
 
+[Presentazione CANVA](https://www.canva.com/design/DAFnZB6nb3E/98P-bMiFRTst6psnEZs9pw/edit?utm_content=DAFnZB6nb3E&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
