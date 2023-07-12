@@ -4,6 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="EDM" projectFiles="true">
+        <logicalFolder name="f1" displayName="serialProtocol" projectFiles="true">
+          <itemPath>EDM/serialProtocol/serialProtocol.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="libraries" projectFiles="true">
         <logicalFolder name="f5" displayName="buffer" projectFiles="true">
           <itemPath>libraries/buffer/buffer.h</itemPath>
@@ -23,6 +28,9 @@
         <logicalFolder name="f4" displayName="uart" projectFiles="true">
           <itemPath>libraries/uart/uart.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="f7" displayName="utils" projectFiles="true">
+          <itemPath>libraries/utils/data_conversion.h</itemPath>
+        </logicalFolder>
         <itemPath>libraries/constants.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -33,6 +41,11 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="EDM" projectFiles="true">
+        <logicalFolder name="f1" displayName="serialProtocol" projectFiles="true">
+          <itemPath>EDM/serialProtocol/serialProtocol.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="libraries" projectFiles="true">
         <logicalFolder name="f5" displayName="buffer" projectFiles="true">
           <itemPath>libraries/buffer/buffer.c</itemPath>
@@ -51,6 +64,9 @@
         </logicalFolder>
         <logicalFolder name="f4" displayName="uart" projectFiles="true">
           <itemPath>libraries/uart/uart.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f7" displayName="utils" projectFiles="true">
+          <itemPath>libraries/utils/data_conversion.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>main.c</itemPath>
@@ -195,7 +211,7 @@
         <property key="advanced-elf" value="true"/>
         <property key="constdata-progmem" value="true"/>
         <property key="gcc-opt-driver-new" value="true"/>
-        <property key="gcc-opt-std" value="-std=c90"/>
+        <property key="gcc-opt-std" value="-std=c99"/>
         <property key="gcc-output-file-format" value="dwarf-3"/>
         <property key="mapped-progmem" value="false"/>
         <property key="omit-pack-options" value="false"/>

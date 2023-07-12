@@ -15,7 +15,7 @@
 #define LCD_DISPLAY_SETUP 0x0C
 #define LCD_SHIFT_RIGHT 0x1C
 #define LCD_HOME 0x02
-#define LETTER_A_CHAR 48
+#define LETTER_A_CHAR '0'
 #define ROW_1_ADDRESS 0x40
 #define ROW_2_ADDRESS 0x10
 #define ROW_3_ADDRESS 0x50

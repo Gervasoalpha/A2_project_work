@@ -1,16 +1,17 @@
 // PIC : 16F877A
-// FREQ : 8MHz
+// FREQ : 20MHz
 // CONFIG
-#pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
-#pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
-#pragma config PWRTE = ON       // Power-up Timer Enable bit (PWRT enabled)
-#pragma config BOREN = ON       // Brown-out Reset Enable bit (BOR enabled)
-#pragma config LVP = ON         // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
-#pragma config CPD = OFF        // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
-#pragma config WRT = OFF        // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
-#pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
+#pragma config FOSC = HS  // Oscillator Selection bits (HS oscillator)
+#pragma config WDTE = OFF // Watchdog Timer Enable bit (WDT disabled)
+#pragma config PWRTE = ON // Power-up Timer Enable bit (PWRT enabled)
+#pragma config BOREN = ON // Brown-out Reset Enable bit (BOR enabled)
+#pragma config LVP = ON	  // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
+#pragma config CPD = OFF  // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
+#pragma config WRT = OFF  // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
+#pragma config CP = OFF	  // Flash Program Memory Code Protection bit (Code protection off)
 
 #include <xc.h>
+#include <stdlib.h>
 
 // include libraries
 #include "libraries/constants.h"
@@ -18,6 +19,10 @@
 #include "libraries/timer/timer.h"
 #include "libraries/lcd/lcd.h"
 #include "libraries/uart/uart.h"
+#include "libraries/buffer/buffer.h"
+#include "EDM/serialProtocol/serialProtocol.h"
+
+unsigned char received = 0;
 
 void main(void)
 {
@@ -32,13 +37,18 @@ void main(void)
 	//
 	LcdInit();
 
+	LcdSendString(WELCOME_STRING);
+
 	while (1)
 	{
-	};
-
+		EDMLoop();
+	}
 	return;
 }
 
+/**
+ * Interrupt Service Routine
+ */
 void __interrupt() ISR()
 {
 	if (TimerZero())
@@ -46,9 +56,11 @@ void __interrupt() ISR()
 		// 1 millisecond interrupt
 	}
 
-	if (UARTHasReceived())
+	unsigned char byteReceived;
+
+	if (UARTInterrupt(&byteReceived))
 	{
-		// get data incoming
-		//UARTGetReceived();
+		received = 1;
+		BufferAppend(byteReceived);
 	}
 }
